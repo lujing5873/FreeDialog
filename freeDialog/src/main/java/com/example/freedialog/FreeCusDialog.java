@@ -1,5 +1,6 @@
 package com.example.freedialog;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
@@ -38,11 +40,11 @@ public abstract class FreeCusDialog extends DialogFragment implements View.OnCli
 
     private View rootView;
     protected Dialog dialog;
-    private int elevation=3;//0不带阴影 其他则带阴影
+    private int elevation=3;//0不带阴影 其他则带阴影 默认值为3
     private float dimAmount=-1;//遮罩层透明度
     private int[] location= new int[2];
     private int xOffset,yOffset;//相对于view的x轴y轴偏移位置
-    private View otherView;//依附的view
+    private View anchorView;//依附的view
     private int gravity;
     private boolean cancel=true;
 
@@ -50,38 +52,32 @@ public abstract class FreeCusDialog extends DialogFragment implements View.OnCli
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-
-//        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-//        dialog.getWindow().addFlags(FLAG_FULLSCREEN);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);//设置背景透明
-//        dialog.getWindow().getDecorView().setBackgroundResource(android.R.color.transparent); //设置背景
-
+        dialog.getWindow().getDecorView().setBackgroundResource(android.R.color.transparent); //设置背景
         ViewGroup view= (ViewGroup) dialog.getWindow().getDecorView();
-        view.removeAllViews();
-        if(otherView!=null) {
-            elevation=elevation==0?3:elevation;//如果没有设置阴影 则给予默认值2
-        }
+        view.removeAllViews();//不要其附属的子FrameLayout
         int pxElevation=dip2px(elevation);
         setDialogView(view, pxElevation);
-        if(otherView!=null) {
+        if(anchorView!=null) {
             setAnchorView(view, pxElevation);
         }
 
-
         // 遮罩层透明度
-        dialog.getWindow().setDimAmount(otherView!=null?0:dimAmount==-1?0.5f:dimAmount);
+        dialog.getWindow().setDimAmount(anchorView!=null?0:dimAmount==-1?0.5f:dimAmount);
         dialog.setCanceledOnTouchOutside(cancel);
         dialog.setCancelable(cancel);
         return dialog;
     }
 
     private void setDialogView(ViewGroup view, int pxElevation) {
-        if(getLayoutId()!=0){
-            if(otherView==null){
+        if(getLayoutId()>0){
+            if(anchorView==null){
                 dialog.getWindow().setGravity(gravity==0? Gravity.CENTER:gravity);//必须设置
             }else{
                 dialog.getWindow().setGravity(Gravity.TOP| Gravity.LEFT);//必须设置
             }
+            //因为rootView inflate的依赖的是DecorView 所以LayoutParams 必定为FrameLayout.LayoutParams
             FrameLayout.LayoutParams params= (FrameLayout.LayoutParams) rootView.getLayoutParams();
             //设置window位布局的设置  如果为固定值的需要加上margin数值
             dialog.getWindow().setLayout(params.width>0
@@ -128,49 +124,47 @@ public abstract class FreeCusDialog extends DialogFragment implements View.OnCli
     }
 
     private void setAnchorView(ViewGroup view, int pxElevation) {
+          if(view!=null) {
+            int pxYOffset=dip2px(yOffset);
+            int pxXOffset=dip2px(xOffset);
+            dialog.getWindow().setGravity(Gravity.TOP | Gravity.LEFT);//必须设置
+            anchorView.getLocationOnScreen(location);
+              //获取window的attributes用于设置位置
+            WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
+            // 获取rootView的高宽
+            final int rHeight = rootView.getMeasuredHeight();
+            final int rWidth = rootView.getMeasuredWidth();
+            int yGravity = gravity & 0xf0;//获取前4位 得到y轴
+            int xGravity = gravity & 0x0f;//获取后4位 得到x轴
+            int x = 0, y = 0;
+            //处理y轴
+            switch (yGravity) {
+                case TOP:
+                    y = location[1] + pxYOffset - getStatusBarHeight() - rHeight - pxElevation * 2;
+                    break;
+                case CENTER_VERTICAL:
+                    y = location[1] + pxYOffset - getStatusBarHeight() - (rHeight - anchorView.getHeight()) / 2;
+                    break;
+                default://BOTTOM
+                    y = location[1] + pxYOffset - getStatusBarHeight() + anchorView.getHeight()-pxElevation;
+                    break;
+                }
 
-                    if(view!=null) {
-                        int pxyOffset=dip2px(yOffset);
-                        int pxxOffset=dip2px(xOffset);
-                        dialog.getWindow().setGravity(Gravity.TOP | Gravity.LEFT);//必须设置
-                        otherView.getLocationOnScreen(location);
-                        WindowManager.LayoutParams params = dialog.getWindow().getAttributes();//设置位置
-                        // 获取rootView的高宽
-                        final int rHeight = rootView.getMeasuredHeight();
-                        final int rWidth = rootView.getMeasuredWidth();
-                        int yGravity = gravity & 0xf0;//获取前4位 得到y轴
-                        int xGravity = gravity & 0x0f;//获取后4位 得到x轴
-                        int x = 0, y = 0;
-                        //处理y轴
-                        switch (yGravity) {
-                            case TOP:
-                                y = location[1] + pxyOffset - getStatusBarHeight() - rHeight - pxElevation * 2;
-                                break;
-                            case CENTER_VERTICAL:
-                                y = location[1] + pxyOffset - getStatusBarHeight() - (rHeight - otherView.getHeight()) / 2;
-                                break;
-                            default://BOTTOM
-                                y = location[1] + pxyOffset - getStatusBarHeight() + otherView.getHeight()-pxElevation;
-                                break;
-                        }
-
-                        //处理x轴
-                        switch (xGravity) {
-                            case LEFT:
-                                x = location[0] + pxxOffset - rWidth - pxElevation * 2;
-                                break;
-                            case RIGHT:
-                                x = location[0] + pxxOffset + otherView.getWidth();
-                                break;
-                            default: //center_horizontal
-                                x = location[0] + pxxOffset - pxElevation - (rWidth - otherView.getWidth()) / 2;
-                                break;
-                        }
-                        params.x=x;
-                        params.y=y;
-                    }
-
-
+                //处理x轴
+            switch (xGravity) {
+                case LEFT:
+                    x = location[0] + pxXOffset - rWidth - pxElevation * 2;
+                    break;
+                case RIGHT:
+                    x = location[0] + pxXOffset + anchorView.getWidth();
+                    break;
+                default: //center_horizontal
+                    x = location[0] + pxXOffset - pxElevation - (rWidth - anchorView.getWidth()) / 2;
+                    break;
+                }
+            params.x=x;
+            params.y=y;
+          }
     }
 
     public abstract int getLayoutId();
@@ -217,8 +211,8 @@ public abstract class FreeCusDialog extends DialogFragment implements View.OnCli
      * @param yOffset  y轴偏移
      * @return
      */
-    public FreeCusDialog setPosition(View view, int xOffset, int yOffset){
-        this.otherView=view;
+    public FreeCusDialog setAnchor(View anchorView, int xOffset, int yOffset){
+        this.anchorView=anchorView;
         this.xOffset=xOffset;
         this.yOffset=yOffset;
         return this;
@@ -242,7 +236,6 @@ public abstract class FreeCusDialog extends DialogFragment implements View.OnCli
 //        如果是全屏了 则返回0
         if ( (getActivity().getWindow().getAttributes().flags & FLAG_FULLSCREEN)
                 == FLAG_FULLSCREEN) {
-            System.out.println("！！！！全屏显示");
             return 0;
         }
         //获取状态栏高度
@@ -276,19 +269,18 @@ public abstract class FreeCusDialog extends DialogFragment implements View.OnCli
     }
 
 
-    @Override
-    public int show(@NonNull FragmentTransaction transaction, @Nullable String tag) {
-        return super.show(transaction, tag);
-    }
-
     @NonNull
     @Override
     public LayoutInflater onGetLayoutInflater(@Nullable Bundle savedInstanceState) {
         if(dialog==null){
             dialog=new Dialog(getActivity());
         }
-        if(getLayoutId()!=0){
+        if(getLayoutId()>0){
             rootView= LayoutInflater.from(getActivity()).inflate(getLayoutId(), (ViewGroup) dialog.getWindow().getDecorView(),false);
+        }else{
+            TextView textView=new TextView(getActivity());
+            textView.setText("no layout id");
+            rootView=textView;
         }
         createView(savedInstanceState);
         return super.onGetLayoutInflater(savedInstanceState);
@@ -307,20 +299,10 @@ public abstract class FreeCusDialog extends DialogFragment implements View.OnCli
         findViewById(ids).setOnClickListener(this);
     }
 
-
     @Override
     public void onClick(View v) {
         if(listener!=null){
             listener.onViewClick(v);
         }
     }
-
-    @Override
-    public void dismiss() {
-//        listener=null;
-//        otherView=null;
-//        dialog=null;
-        super.dismiss();
-    }
-
 }
