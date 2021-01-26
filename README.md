@@ -77,17 +77,25 @@ findViewById(R.id.tv_list_free).setOnClickListener(new View.OnClickListener() {
 ### 属性说明
 #### FreeCusDialog
 setElevation(int dp) 设置阴影 默认为3dp 值为dp值
+
 setDimAmount(float dimAmount)  设置遮罩层透明度 如果没有设置anchorView 默认为0.5F否则为0
+
 setCancel(boolean cancel) 设置是否可以点击外部取消
+
 setAnchor(View anchorView, int xOffset, int yOffset) 设置anchorView  
+
 setGravity(int gravity) 设置gravity
+
 findViewById(@IdRes int id) 根据id查找view
+
 setListener(ViewClick listener) 外部设置点击监听
+
 addViewListener(int ids) 内部根据按钮设置点击监听
 
 
 #### FreeDialog
 getViewById(@IdRes int id) 根据id查找view 为了防止在activity使用相同名称混淆
+
 其余同上
 
 
