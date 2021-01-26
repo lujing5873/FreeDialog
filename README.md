@@ -1,5 +1,5 @@
 # FreeDialog
-###如何使用
+### 如何使用
 项目gradle下 添加jitpack仓库
 ```
 allprojects {
@@ -14,9 +14,9 @@ dependencies {
 implementation 'com.github.lujing5873:FreeDialog:V1.0.0'
 }
 ```
-###使用
+### 使用
 
-####1.继承FreeCusDialog 重写getLayoutId 和 createView方法
+#### 1.继承FreeCusDialog 重写getLayoutId 和 createView方法
 ```
 public class ListDialog extends FreeCusDialog {
 
@@ -50,7 +50,7 @@ findViewById(R.id.tv_list).setOnClickListener(new View.OnClickListener() {
             }
         });
 ```
-####2直接在activity中使用FreeDialog
+#### 2直接在activity中使用FreeDialog
 ```
 findViewById(R.id.tv_list_free).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,8 +74,8 @@ findViewById(R.id.tv_list_free).setOnClickListener(new View.OnClickListener() {
         });
 ```
 
-###属性说明
-####FreeCusDialog
+### 属性说明
+#### FreeCusDialog
 setElevation(int dp) 设置阴影 默认为3dp 值为dp值
 setDimAmount(float dimAmount)  设置遮罩层透明度 如果没有设置anchorView 默认为0.5F否则为0
 setCancel(boolean cancel) 设置是否可以点击外部取消
@@ -86,11 +86,9 @@ setListener(ViewClick listener) 外部设置点击监听
 addViewListener(int ids) 内部根据按钮设置点击监听
 
 
-####FreeDialog
- getViewById(@IdRes int id) 根据id查找view 为了防止在activity使用相同名称混淆
- 其余同上
-
-
+#### FreeDialog
+getViewById(@IdRes int id) 根据id查找view 为了防止在activity使用相同名称混淆
+其余同上
 
 
 
