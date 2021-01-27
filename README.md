@@ -50,7 +50,7 @@ findViewById(R.id.tv_list).setOnClickListener(new View.OnClickListener() {
             }
         });
 ```
-#### 2直接在activity中使用FreeDialog
+#### 2.直接在activity中使用FreeDialog
 ```
 findViewById(R.id.tv_list_free).setOnClickListener(new View.OnClickListener() {
             @Override
