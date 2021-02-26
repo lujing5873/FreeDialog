@@ -11,7 +11,7 @@ allprojects {
 module.gradle下添加
 ```
 dependencies {
-implementation 'com.github.lujing5873:FreeDialog:V1.0.0'
+implementation 'com.github.lujing5873:FreeDialog:V1.1.0'
 }
 ```
 ### 使用
@@ -92,6 +92,9 @@ setListener(ViewClick listener) 外部设置点击监听
 
 addViewListener(int ids) 内部根据按钮设置点击监听
 
+setDrag(Boolean canDrag) 设置是否可以长按拖拽
+
+setTimeMills(int timeMills)设置长按时间  默认为300ms
 
 #### FreeDialog
 getViewById(@IdRes int id) 根据id查找view 为了防止在activity使用相同名称混淆
