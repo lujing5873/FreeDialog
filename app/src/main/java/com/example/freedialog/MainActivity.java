@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 new TextDialog()
+                        .setCanDrag(true)
                         .show(getSupportFragmentManager(),"text");
             }
         });
@@ -32,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 new ListDialog()
+                        .setDimAmount(0)
                         .show(getSupportFragmentManager(),"list");
             }
         });
@@ -70,9 +72,5 @@ public class MainActivity extends AppCompatActivity {
                         .show(getSupportFragmentManager(),"list_free");
             }
         });
-
-
     }
-
-
 }

@@ -1,5 +1,6 @@
 package com.example.freedialog;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 
@@ -62,18 +63,21 @@ public class FreeDialog extends FreeCusDialog{
             freeDialog.setCancel(cancel);
             return this;
         }
-
-
-        /**
-         * 设置dialog位置
-         * @param xOffset  x轴偏移
-         * @param yOffset  y轴偏移
-         * @return
-         */
         public Builder setAnchor(View anchorView, int xOffset, int yOffset){
             freeDialog.setAnchor(anchorView,xOffset,yOffset);
             return this;
         }
+
+        public Builder setDrag(Boolean canDrag){
+            freeDialog.setCanDrag(canDrag);
+            return this;
+        }
+
+        public Builder setTimeMills(int timeMills){
+            freeDialog.setTimeMillis(timeMills);
+            return this;
+        }
+
         public FreeDialog show(FragmentManager fragmentManager, String tag){
             freeDialog.show(fragmentManager,tag);
             return freeDialog;

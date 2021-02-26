@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -38,7 +39,7 @@ public abstract class FreeCusDialog extends DialogFragment implements View.OnCli
     public static final int CENTER_HORIZONTAL = AXIS_SPECIFIED<<AXIS_X_SHIFT;// 0000 0001  (1)
     public static final int CENTER = CENTER_VERTICAL|CENTER_HORIZONTAL; // 0001 0001  (17)
 
-    private View rootView;
+    protected View rootView;
     protected Dialog dialog;
     private int elevation=3;//0不带阴影 其他则带阴影 默认值为3
     private float dimAmount=-1;//遮罩层透明度
@@ -48,7 +49,13 @@ public abstract class FreeCusDialog extends DialogFragment implements View.OnCli
     private int gravity;
     private boolean cancel=true;
 
+    private boolean canDrag;//是否可以拖拽
+    private int timeMillis=300; //长按触发时间
+    boolean isLongClickModule = false;
+    float lastX,lastY,xDown,yDown;
     protected ViewClick listener;
+
+
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
@@ -59,15 +66,53 @@ public abstract class FreeCusDialog extends DialogFragment implements View.OnCli
         view.removeAllViews();//不要其附属的子FrameLayout
         int pxElevation=dip2px(elevation);
         setDialogView(view, pxElevation);
+        if(canDrag){
+            setDrag(view);
+        }
         if(anchorView!=null) {
             setAnchorView(view, pxElevation);
         }
-
         // 遮罩层透明度
         dialog.getWindow().setDimAmount(anchorView!=null?0:dimAmount==-1?0.5f:dimAmount);
         dialog.setCanceledOnTouchOutside(cancel);
         dialog.setCancelable(cancel);
         return dialog;
+    }
+
+    private void setDrag(ViewGroup view) {
+        WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
+        view.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent motionEvent) {
+                switch (motionEvent.getAction()){
+                    case MotionEvent.ACTION_DOWN:
+                        xDown =motionEvent.getRawX();
+                        yDown =motionEvent.getRawY();
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        //当滑动时背景为选中状态 //检测是否长按,在非长按时检测
+                        if (!isLongClickModule) {
+                            isLongClickModule = isLongPressed(xDown, yDown, motionEvent.getRawX(),
+                                    motionEvent.getRawY(), motionEvent.getDownTime(), motionEvent.getEventTime()
+                                    , timeMillis);
+                        }
+                        if (isLongClickModule){
+                            params.x = params.x+(int) (motionEvent.getRawX()-lastX);
+                            params.y = params.y+(int) (motionEvent.getRawY()-lastY);
+                            dialog.getWindow().setAttributes(params);
+                        }
+
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        isLongClickModule=false;
+                        break;
+                }
+
+                lastX=motionEvent.getRawX();
+                lastY=motionEvent.getRawY();
+                return false;
+            }
+        });
     }
 
     private void setDialogView(ViewGroup view, int pxElevation) {
@@ -87,33 +132,6 @@ public abstract class FreeCusDialog extends DialogFragment implements View.OnCli
                             ?params.height+pxElevation*2+params.bottomMargin+params.topMargin
                             :params.height);
 
-            DisplayMetrics screen=getWindowSize();//屏幕宽高
-            int withSpec=0, heightSpec=0;
-            switch (params.width){
-                case ViewGroup.LayoutParams.MATCH_PARENT:
-                    withSpec = View.MeasureSpec.makeMeasureSpec(screen.widthPixels-pxElevation*2, View.MeasureSpec.EXACTLY);
-                    break;
-                case ViewGroup.LayoutParams.WRAP_CONTENT:
-                    withSpec = View.MeasureSpec.makeMeasureSpec(screen.widthPixels-pxElevation*2, View.MeasureSpec.AT_MOST);
-                    break;
-                default: //固定值
-                    withSpec = View.MeasureSpec.makeMeasureSpec(params.width, View.MeasureSpec.EXACTLY);
-                    break;
-            }
-            switch (params.height){
-                case ViewGroup.LayoutParams.MATCH_PARENT:
-                    heightSpec = View.MeasureSpec.makeMeasureSpec(screen.heightPixels-pxElevation*2, View.MeasureSpec.EXACTLY);
-                    break;
-                case ViewGroup.LayoutParams.WRAP_CONTENT:
-                    heightSpec = View.MeasureSpec.makeMeasureSpec(screen.heightPixels-pxElevation*2, View.MeasureSpec.AT_MOST);
-                    break;
-                default: //固定值
-                    heightSpec = View.MeasureSpec.makeMeasureSpec(params.height, View.MeasureSpec.EXACTLY);
-                    break;
-            }
-
-            //手动measure获取view大小 用于后续位置调整
-            rootView.measure(withSpec, heightSpec);
             params.leftMargin+=pxElevation;
             params.rightMargin+=pxElevation;
             params.topMargin+=pxElevation;
@@ -125,12 +143,43 @@ public abstract class FreeCusDialog extends DialogFragment implements View.OnCli
 
     private void setAnchorView(ViewGroup view, int pxElevation) {
           if(view!=null) {
+            //因为rootView inflate的依赖的是DecorView 所以LayoutParams 必定为FrameLayout.LayoutParams
+              FrameLayout.LayoutParams params= (FrameLayout.LayoutParams) rootView.getLayoutParams();
+              DisplayMetrics screen=getWindowSize();//屏幕宽高
+              int withSpec=0, heightSpec=0;
+              switch (params.width){
+                  case ViewGroup.LayoutParams.MATCH_PARENT:
+                      withSpec = View.MeasureSpec.makeMeasureSpec(screen.widthPixels-pxElevation*2, View.MeasureSpec.EXACTLY);
+                      break;
+                  case ViewGroup.LayoutParams.WRAP_CONTENT:
+                      withSpec = View.MeasureSpec.makeMeasureSpec(screen.widthPixels-pxElevation*2, View.MeasureSpec.AT_MOST);
+                      break;
+                  default: //固定值
+                      withSpec = View.MeasureSpec.makeMeasureSpec(params.width, View.MeasureSpec.EXACTLY);
+                      break;
+              }
+              switch (params.height){
+                  case ViewGroup.LayoutParams.MATCH_PARENT:
+                      heightSpec = View.MeasureSpec.makeMeasureSpec(screen.heightPixels-pxElevation*2, View.MeasureSpec.EXACTLY);
+                      break;
+                  case ViewGroup.LayoutParams.WRAP_CONTENT:
+                      heightSpec = View.MeasureSpec.makeMeasureSpec(screen.heightPixels-pxElevation*2, View.MeasureSpec.AT_MOST);
+                      break;
+                  default: //固定值
+                      heightSpec = View.MeasureSpec.makeMeasureSpec(params.height, View.MeasureSpec.EXACTLY);
+                      break;
+              }
+
+              //手动measure获取view大小 用于后续位置调整
+              rootView.measure(withSpec, heightSpec);
+
+
             int pxYOffset=dip2px(yOffset);
             int pxXOffset=dip2px(xOffset);
             dialog.getWindow().setGravity(Gravity.TOP | Gravity.LEFT);//必须设置
             anchorView.getLocationOnScreen(location);
               //获取window的attributes用于设置位置
-            WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
+            WindowManager.LayoutParams windowParams = dialog.getWindow().getAttributes();
             // 获取rootView的高宽
             final int rHeight = rootView.getMeasuredHeight();
             final int rWidth = rootView.getMeasuredWidth();
@@ -162,22 +211,31 @@ public abstract class FreeCusDialog extends DialogFragment implements View.OnCli
                     x = location[0] + pxXOffset - pxElevation - (rWidth - anchorView.getWidth()) / 2;
                     break;
                 }
-            params.x=x;
-            params.y=y;
+              windowParams.x=x;
+              windowParams.y=y;
           }
     }
 
     public abstract int getLayoutId();
 
 
-    public int getElevation() {
-        return elevation;
+    @NonNull
+    @Override
+    public LayoutInflater onGetLayoutInflater(@Nullable Bundle savedInstanceState) {
+        if(dialog==null){
+            dialog=new Dialog(getActivity());
+        }
+        if(getLayoutId()>0){
+            rootView= LayoutInflater.from(getActivity()).inflate(getLayoutId(), (ViewGroup) dialog.getWindow().getDecorView(),false);
+        }else{
+            TextView textView=new TextView(getActivity());
+            textView.setText("no layout id");
+            rootView=textView;
+        }
+        createView(savedInstanceState);
+        return super.onGetLayoutInflater(savedInstanceState);
     }
 
-    public FreeCusDialog setElevation(int elevation) {
-        this.elevation = elevation;
-        return this;
-    }
 
     @Nullable
     @Override
@@ -186,37 +244,6 @@ public abstract class FreeCusDialog extends DialogFragment implements View.OnCli
     }
     protected abstract void createView(Bundle savedInstanceState);
 
-    public float getDimAmount() {
-        return dimAmount;
-    }
-
-    public FreeCusDialog setDimAmount(float dimAmount) {
-        this.dimAmount = dimAmount;
-        return this;
-    }
-
-
-    public boolean isCancel() {
-        return cancel;
-    }
-
-    public FreeCusDialog setCancel(boolean cancel) {
-        this.cancel = cancel;
-        return this;
-    }
-
-    /**
-     * 设置dialog位置
-     * @param xOffset  x轴偏移
-     * @param yOffset  y轴偏移
-     * @return
-     */
-    public FreeCusDialog setAnchor(View anchorView, int xOffset, int yOffset){
-        this.anchorView=anchorView;
-        this.xOffset=xOffset;
-        this.yOffset=yOffset;
-        return this;
-    }
 
     /**
      * dp转px
@@ -254,55 +281,154 @@ public abstract class FreeCusDialog extends DialogFragment implements View.OnCli
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(outMetrics);
         return outMetrics;
     }
+    public <T extends View> T findViewById(@IdRes int id) {
+        return rootView.findViewById(id);
+    }
+    public interface  ViewClick{
+        void onViewClick(View view);
+    }
+    @Override
+    public void onClick(View v) {
+        if(listener!=null){
+            listener.onViewClick(v);
+        }
+    }
 
+    private boolean isLongPressed(float lastX, float lastY,
+                                  float thisX, float thisY,
+                                  long lastDownTime, long thisEventTime,
+                                  long longPressTime) {
+        float offsetX = Math.abs(thisX - lastX);
+        float offsetY = Math.abs(thisY - lastY);
+        long intervalTime = thisEventTime - lastDownTime;
+        if (offsetX <= 10 && offsetY <= 10 && intervalTime >= longPressTime) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 设置是否可以长按拖拽
+     * @param canDrag
+     * @return
+     */
+    public FreeCusDialog setCanDrag(boolean canDrag) {
+        this.canDrag = canDrag;
+        return this;
+    }
+
+    /**
+     * 设置拖拽的长按时间
+     * @param timeMillis
+     * @return
+     */
+    public FreeCusDialog setTimeMillis(int timeMillis) {
+        this.timeMillis = timeMillis;
+        return this;
+    }
+
+    /**
+     * 获取阴影值
+     * @return
+     */
+    public int getElevation() {
+        return elevation;
+    }
+
+    /**
+     * 设置阴影值
+     * @param elevation
+     * @return
+     */
+    public FreeCusDialog setElevation(int elevation) {
+        this.elevation = elevation;
+        return this;
+    }
+
+    /**
+     * 获取遮罩层透明度
+     * @return 0-1
+     */
+    public float getDimAmount() {
+        return dimAmount;
+    }
+
+    /**
+     * 设置遮罩层透明度
+     * @param dimAmount 0-1
+     * @return
+     */
+    public FreeCusDialog setDimAmount(float dimAmount) {
+        this.dimAmount = dimAmount;
+        return this;
+    }
+
+    /**
+     * 获取是否可以取消
+     * @return
+     */
+    public boolean isCancel() {
+        return cancel;
+    }
+
+    /**
+     * 设置是否可以取消
+     * @param cancel
+     * @return
+     */
+    public FreeCusDialog setCancel(boolean cancel) {
+        this.cancel = cancel;
+        return this;
+    }
+
+    /**
+     * 设置dialog位置
+     * @param xOffset  x轴偏移
+     * @param yOffset  y轴偏移
+     * @return
+     */
+    public FreeCusDialog setAnchor(View anchorView, int xOffset, int yOffset){
+        this.anchorView=anchorView;
+        this.xOffset=xOffset;
+        this.yOffset=yOffset;
+        return this;
+    }
+
+    /**
+     * 获取dialog的gravity
+     * @return
+     */
     public int getGravity() {
         return gravity;
     }
 
+    /**
+     * 设置dialog的gravity
+     * @param gravity
+     * @return
+     */
     public FreeCusDialog setGravity(int gravity) {
         this.gravity = gravity;
         return this;
     }
 
-    public <T extends View> T findViewById(@IdRes int id) {
-        return rootView.findViewById(id);
-    }
-
-
-    @NonNull
-    @Override
-    public LayoutInflater onGetLayoutInflater(@Nullable Bundle savedInstanceState) {
-        if(dialog==null){
-            dialog=new Dialog(getActivity());
-        }
-        if(getLayoutId()>0){
-            rootView= LayoutInflater.from(getActivity()).inflate(getLayoutId(), (ViewGroup) dialog.getWindow().getDecorView(),false);
-        }else{
-            TextView textView=new TextView(getActivity());
-            textView.setText("no layout id");
-            rootView=textView;
-        }
-        createView(savedInstanceState);
-        return super.onGetLayoutInflater(savedInstanceState);
-    }
-
-    public interface  ViewClick{
-        void onViewClick(View view);
-    }
-
+    /**
+     * 设置按键监听
+     * @param listener
+     * @return
+     */
     public FreeCusDialog setListener(ViewClick listener) {
         this.listener = listener;
         return this;
     }
 
-    protected void addViewListener(int ids){
-        findViewById(ids).setOnClickListener(this);
-    }
-
-    @Override
-    public void onClick(View v) {
-        if(listener!=null){
-            listener.onViewClick(v);
+    /**
+     * 添加点击监听
+     * @param ids
+     */
+    protected void addViewListener(int ...ids){
+        for(int id:ids){
+            findViewById(id).setOnClickListener(this);
         }
     }
 }

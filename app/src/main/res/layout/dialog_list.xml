@@ -5,9 +5,10 @@
     android:layout_height="wrap_content"
     android:background="@color/white">
 
-    <androidx.recyclerview.widget.RecyclerView
+    <com.example.freedialog.NoTouchRecyclerView
         android:id="@+id/rv_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

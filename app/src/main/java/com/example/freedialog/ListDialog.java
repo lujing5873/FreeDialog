@@ -1,15 +1,21 @@
 package com.example.freedialog;
 
 import android.os.Bundle;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.WindowManager;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ListDialog extends FreeCusDialog {
-
+    float xDown, yDown;
+    boolean isLongClickModule = false;
+    float lastX,lastY;
     @Override
     public int getLayoutId() {
         return R.layout.dialog_list;
@@ -27,4 +33,5 @@ public class ListDialog extends FreeCusDialog {
         testAdapter.submitList(list);
         recyclerView.setAdapter(testAdapter);
     }
+
 }
