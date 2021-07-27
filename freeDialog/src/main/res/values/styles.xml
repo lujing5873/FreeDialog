@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--从上往下-->
+    <style name="dialogScaleTopToBottom" parent="android:Animation" mce_bogus="1">
+        <item name="android:windowEnterAnimation">@anim/anim_dialog_enter</item>
+        <item name="android:windowExitAnimation">@anim/anim_dialog_exit</item>
+    </style>
+
+
+</resources>

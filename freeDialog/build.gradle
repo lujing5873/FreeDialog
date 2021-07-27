@@ -1,7 +1,6 @@
 plugins {
     id 'com.android.library'
 }
-apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 group = 'com.github.lujing5873'
 
@@ -32,5 +31,4 @@ android {
 dependencies {
     compileOnly 'androidx.appcompat:appcompat:1.2.0'
     compileOnly 'com.google.android.material:material:1.2.0'
-    compileOnly "androidx.constraintlayout:constraintlayout:2.0.4"
 }

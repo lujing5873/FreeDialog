@@ -1,11 +1,14 @@
 package com.example.freedialog;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.Animation;
 
 import androidx.annotation.IdRes;
 import androidx.fragment.app.FragmentManager;
+
+import com.example.freedialog.dialog.WeakDialog;
+
 
 public class FreeDialog extends FreeCusDialog{
     private int layoutId;
@@ -21,12 +24,13 @@ public class FreeDialog extends FreeCusDialog{
         }
     }
 
-    public void setLayoutId(int layoutId,Builder builder) {
+
+    public void setLayoutId(int layoutId, Builder builder) {
         this.layoutId = layoutId;
         this.builder=builder;
     }
 
-    public abstract static class Builder{
+    public abstract static class Builder {
         private FreeDialog freeDialog;
         public Builder(int layoutId){
             freeDialog = new FreeDialog();
@@ -35,7 +39,7 @@ public class FreeDialog extends FreeCusDialog{
         public abstract void onCreateView(Bundle savedInstanceState);
 
         protected  <T extends View> T getViewById(@IdRes int id) {
-            return freeDialog.findViewById(id);
+            return freeDialog.getView(id);
         }
         public Builder setGravity(int gravity) {
             freeDialog.setGravity(gravity);
@@ -78,9 +82,23 @@ public class FreeDialog extends FreeCusDialog{
             return this;
         }
 
+        public Builder setStyle(int style){
+            freeDialog.setStyle(style);
+            return this;
+        }
+
+        public Builder setExitAnimation(Animation animation){
+            freeDialog.setExitAnimation(animation);
+            return this;
+        }
         public FreeDialog show(FragmentManager fragmentManager, String tag){
-            freeDialog.show(fragmentManager,tag);
+            freeDialog.show(fragmentManager.beginTransaction(),tag);
             return freeDialog;
         }
+
+        public void dismiss(){
+            freeDialog.dismiss();
+        }
     }
+
 }

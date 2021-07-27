@@ -1,7 +1,7 @@
 package com.example.freedialog;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.Animation;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
@@ -19,13 +20,17 @@ import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
+
+
+import com.example.freedialog.dialog.WeakDialog;
+import com.example.freedialog.utils.SoftKeyboardUtils;
 
 import static android.view.WindowManager.LayoutParams.FLAG_FULLSCREEN;
 
 
-public abstract class FreeCusDialog extends DialogFragment implements View.OnClickListener {
+public abstract class FreeCusDialog extends DialogFragment implements
+        View.OnClickListener ,
+        WeakDialog.onExit {
     private static final int AXIS_SPECIFIED = 0x0001;
     private static final int AXIS_PULL_BEFORE = 0x0002;  //0000 0010
     private static final int AXIS_PULL_AFTER = 0x0004; // 0000 0100
@@ -39,23 +44,29 @@ public abstract class FreeCusDialog extends DialogFragment implements View.OnCli
     public static final int CENTER_HORIZONTAL = AXIS_SPECIFIED<<AXIS_X_SHIFT;// 0000 0001  (1)
     public static final int CENTER = CENTER_VERTICAL|CENTER_HORIZONTAL; // 0001 0001  (17)
 
+    public static final int ANIM_SCALE_TOP_TO_BOTTOM=1;
+
+
     protected View rootView;
-    protected Dialog dialog;
-    private int elevation=3;//0不带阴影 其他则带阴影 默认值为3
+    protected WeakDialog dialog;
+    private int elevation=2;//0不带阴影 其他则带阴影 默认值为2
     private float dimAmount=-1;//遮罩层透明度
     private int[] location= new int[2];
     private int xOffset,yOffset;//相对于view的x轴y轴偏移位置
     private View anchorView;//依附的view
     private int gravity;
     private boolean cancel=true;
-
+    private int softMode;
     private boolean canDrag;//是否可以拖拽
     private int timeMillis=300; //长按触发时间
     boolean isLongClickModule = false;
     float lastX,lastY,xDown,yDown;
-    protected ViewClick listener;
+    private ViewClick listener;
+    private int style;
+    private boolean isTrend;
 
-
+    Animation exitAnimation;
+    OnDisMissFreeDialog dismiss;
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
@@ -73,10 +84,26 @@ public abstract class FreeCusDialog extends DialogFragment implements View.OnCli
             setAnchorView(view, pxElevation);
         }
         // 遮罩层透明度
-        dialog.getWindow().setDimAmount(anchorView!=null?0:dimAmount==-1?0.5f:dimAmount);
+        dialog.getWindow().setDimAmount(anchorView!=null?dimAmount==-1?0:dimAmount
+                :dimAmount==-1?0.5f:dimAmount);
+        if(style>0){
+            setStyle(dialog.getWindow());
+        }
         dialog.setCanceledOnTouchOutside(cancel);
         dialog.setCancelable(cancel);
+        dialog.setExitAnimation(exitAnimation);
+        dialog.setOnExit(this);
         return dialog;
+    }
+
+    private void setStyle(Window window){ //window动画
+        switch (style){
+            case ANIM_SCALE_TOP_TO_BOTTOM:
+                window.setWindowAnimations(R.style.dialogScaleTopToBottom);
+                break;
+            default:window.setWindowAnimations(style);
+            break;
+        }
     }
 
     private void setDrag(ViewGroup view) {
@@ -122,13 +149,18 @@ public abstract class FreeCusDialog extends DialogFragment implements View.OnCli
             }else{
                 dialog.getWindow().setGravity(Gravity.TOP| Gravity.LEFT);//必须设置
             }
+            if(softMode>0){
+                dialog.getWindow().setSoftInputMode(softMode);
+            }else{
+                dialog.getWindow().setSoftInputMode(softMode|WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE );
+            }
             //因为rootView inflate的依赖的是DecorView 所以LayoutParams 必定为FrameLayout.LayoutParams
             FrameLayout.LayoutParams params= (FrameLayout.LayoutParams) rootView.getLayoutParams();
             //设置window位布局的设置  如果为固定值的需要加上margin数值
             dialog.getWindow().setLayout(params.width>0
                             ?params.width+pxElevation*2+params.leftMargin+params.rightMargin
                             :params.width
-                            ,params.height>0
+                    ,params.height>0
                             ?params.height+pxElevation*2+params.bottomMargin+params.topMargin
                             :params.height);
 
@@ -142,88 +174,137 @@ public abstract class FreeCusDialog extends DialogFragment implements View.OnCli
     }
 
     private void setAnchorView(ViewGroup view, int pxElevation) {
-          if(view!=null) {
-            //因为rootView inflate的依赖的是DecorView 所以LayoutParams 必定为FrameLayout.LayoutParams
-              FrameLayout.LayoutParams params= (FrameLayout.LayoutParams) rootView.getLayoutParams();
-              DisplayMetrics screen=getWindowSize();//屏幕宽高
-              int withSpec=0, heightSpec=0;
-              switch (params.width){
-                  case ViewGroup.LayoutParams.MATCH_PARENT:
-                      withSpec = View.MeasureSpec.makeMeasureSpec(screen.widthPixels-pxElevation*2, View.MeasureSpec.EXACTLY);
-                      break;
-                  case ViewGroup.LayoutParams.WRAP_CONTENT:
-                      withSpec = View.MeasureSpec.makeMeasureSpec(screen.widthPixels-pxElevation*2, View.MeasureSpec.AT_MOST);
-                      break;
-                  default: //固定值
-                      withSpec = View.MeasureSpec.makeMeasureSpec(params.width, View.MeasureSpec.EXACTLY);
-                      break;
-              }
-              switch (params.height){
-                  case ViewGroup.LayoutParams.MATCH_PARENT:
-                      heightSpec = View.MeasureSpec.makeMeasureSpec(screen.heightPixels-pxElevation*2, View.MeasureSpec.EXACTLY);
-                      break;
-                  case ViewGroup.LayoutParams.WRAP_CONTENT:
-                      heightSpec = View.MeasureSpec.makeMeasureSpec(screen.heightPixels-pxElevation*2, View.MeasureSpec.AT_MOST);
-                      break;
-                  default: //固定值
-                      heightSpec = View.MeasureSpec.makeMeasureSpec(params.height, View.MeasureSpec.EXACTLY);
-                      break;
-              }
-
-              //手动measure获取view大小 用于后续位置调整
-              rootView.measure(withSpec, heightSpec);
-
-
+        if(view!=null) {
+            int yGravity = gravity & 0xf0;//获取前4位 得到y轴
+            int xGravity = gravity & 0x0f;//获取后4位 得到x轴
             int pxYOffset=dip2px(yOffset);
             int pxXOffset=dip2px(xOffset);
+
+            measureRoot(pxElevation);
+
+            //重新设置窗口大小
+            if(!isTrend){
+                dialog.getWindow().setLayout(rootView.getMeasuredWidth()+pxElevation*2,rootView.getMeasuredHeight()+pxElevation*2);
+            }
+
+
             dialog.getWindow().setGravity(Gravity.TOP | Gravity.LEFT);//必须设置
-            anchorView.getLocationOnScreen(location);
-              //获取window的attributes用于设置位置
+            //获取window的attributes用于设置位置
             WindowManager.LayoutParams windowParams = dialog.getWindow().getAttributes();
             // 获取rootView的高宽
             final int rHeight = rootView.getMeasuredHeight();
             final int rWidth = rootView.getMeasuredWidth();
-            int yGravity = gravity & 0xf0;//获取前4位 得到y轴
-            int xGravity = gravity & 0x0f;//获取后4位 得到x轴
             int x = 0, y = 0;
+            int statusHeight=getStatusBarHeight();
             //处理y轴
             switch (yGravity) {
                 case TOP:
-                    y = location[1] + pxYOffset - getStatusBarHeight() - rHeight - pxElevation * 2;
+                    y = location[1] + pxYOffset - statusHeight - rHeight - pxElevation * 2;
                     break;
                 case CENTER_VERTICAL:
-                    y = location[1] + pxYOffset - getStatusBarHeight() - (rHeight - anchorView.getHeight()) / 2;
+                    y = location[1] + pxYOffset - statusHeight - (rHeight - anchorView.getHeight()) / 2-pxElevation;
                     break;
                 default://BOTTOM
-                    y = location[1] + pxYOffset - getStatusBarHeight() + anchorView.getHeight()-pxElevation;
+                    y = location[1] + pxYOffset - statusHeight + anchorView.getHeight()-pxElevation;
                     break;
-                }
+            }
 
-                //处理x轴
+            //处理x轴
             switch (xGravity) {
                 case LEFT:
-                    x = location[0] + pxXOffset - rWidth - pxElevation * 2;
+                    x = location[0] + pxXOffset - rWidth - pxElevation;
                     break;
                 case RIGHT:
-                    x = location[0] + pxXOffset + anchorView.getWidth();
+                    x = location[0] + pxXOffset + anchorView.getWidth()-pxElevation;
                     break;
                 default: //center_horizontal
-                    x = location[0] + pxXOffset - pxElevation - (rWidth - anchorView.getWidth()) / 2;
+                    x = location[0] + pxXOffset- (rWidth - anchorView.getWidth()) / 2 - pxElevation ;
                     break;
-                }
-              windowParams.x=x;
-              windowParams.y=y;
-          }
+            }
+            windowParams.x=x;
+            windowParams.y=y;
+        }
+    }
+    //测算rootView 宽高
+    private void measureRoot(int pxElevation){
+        //因为rootView inflate的依赖的是DecorView 所以LayoutParams 必定为FrameLayout.LayoutParams
+        FrameLayout.LayoutParams params= (FrameLayout.LayoutParams) rootView.getLayoutParams();
+        DisplayMetrics screen=getWindowSize();//屏幕宽高
+        int withSpec, heightSpec;
+        int yGravity = gravity & 0xf0;//获取前4位 得到y轴
+        int xGravity = gravity & 0x0f;//获取后4位 得到x轴
+        anchorView.getLocationOnScreen(location);
+        int statusHeight=getStatusBarHeight();
+        int heightMax,withMax;
+        int defMaxHeight=screen.heightPixels-pxElevation*2
+                ,defMaxWith=screen.widthPixels-pxElevation*2;
+        //处理y轴
+        switch (yGravity) {
+            case TOP:
+                heightMax = Math.min(defMaxHeight,location[1]-statusHeight-pxElevation*2);//最大值不能超过Y
+                break;
+            case CENTER_VERTICAL:
+                heightMax =Math.min(defMaxHeight,(location[1]-statusHeight)*2+anchorView.getHeight()-pxElevation*2);
+                break;
+            default://BOTTOM
+                heightMax = Math.min(defMaxHeight,screen.heightPixels-location[1]+statusHeight-pxElevation*2);
+                break;
+        }
+
+        //处理x轴
+        switch (xGravity) {
+            case LEFT:
+                withMax = Math.min(defMaxWith,location[0]-pxElevation*2);
+                break;
+            case RIGHT:
+                withMax = Math.min(defMaxWith,screen.widthPixels-location[0]-anchorView.getWidth()-pxElevation*2);
+                break;
+            case CENTER_HORIZONTAL:
+                withMax = Math.min(defMaxWith,location[0]*2+anchorView.getWidth()-pxElevation*2);
+                break;
+            default: //center_horizontal
+                withMax = defMaxWith;
+                break;
+        }
+
+        //处理宽度
+        switch (params.width){
+            case ViewGroup.LayoutParams.MATCH_PARENT:
+                withSpec = View.MeasureSpec.makeMeasureSpec(withMax, View.MeasureSpec.EXACTLY);
+                break;
+            case ViewGroup.LayoutParams.WRAP_CONTENT:
+                withSpec = View.MeasureSpec.makeMeasureSpec(withMax, View.MeasureSpec.AT_MOST);
+                break;
+            default: //固定值
+                withSpec = View.MeasureSpec.makeMeasureSpec(Math.min(params.width,withMax), View.MeasureSpec.EXACTLY);
+                break;
+        }
+        //处理高度
+        switch (params.height){
+            case ViewGroup.LayoutParams.MATCH_PARENT:
+                heightSpec = View.MeasureSpec.makeMeasureSpec(heightMax, View.MeasureSpec.EXACTLY);
+                break;
+            case ViewGroup.LayoutParams.WRAP_CONTENT:
+                heightSpec = View.MeasureSpec.makeMeasureSpec(heightMax, View.MeasureSpec.AT_MOST);
+                break;
+            default: //固定值
+                heightSpec = View.MeasureSpec.makeMeasureSpec(Math.min(params.height,heightMax), View.MeasureSpec.EXACTLY);
+                break;
+        }
+        //手动measure获取view大小 用于后续位置调整
+        rootView.measure(withSpec, heightSpec);
     }
 
+    /**
+     * dialog的id
+     * @return
+     */
     public abstract int getLayoutId();
-
-
     @NonNull
     @Override
     public LayoutInflater onGetLayoutInflater(@Nullable Bundle savedInstanceState) {
         if(dialog==null){
-            dialog=new Dialog(getActivity());
+            dialog=new WeakDialog(getActivity());
         }
         if(getLayoutId()>0){
             rootView= LayoutInflater.from(getActivity()).inflate(getLayoutId(), (ViewGroup) dialog.getWindow().getDecorView(),false);
@@ -242,6 +323,11 @@ public abstract class FreeCusDialog extends DialogFragment implements View.OnCli
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return null;
     }
+
+    /**
+     * dialog初始化view
+     * @param savedInstanceState
+     */
     protected abstract void createView(Bundle savedInstanceState);
 
 
@@ -281,12 +367,17 @@ public abstract class FreeCusDialog extends DialogFragment implements View.OnCli
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(outMetrics);
         return outMetrics;
     }
-    public <T extends View> T findViewById(@IdRes int id) {
+    public <T extends View> T getView(@IdRes int id) {
         return rootView.findViewById(id);
     }
+
     public interface  ViewClick{
         void onViewClick(View view);
     }
+    public interface  OnDisMissFreeDialog{
+        void onDisFree();
+    }
+
     @Override
     public void onClick(View v) {
         if(listener!=null){
@@ -428,7 +519,92 @@ public abstract class FreeCusDialog extends DialogFragment implements View.OnCli
      */
     protected void addViewListener(int ...ids){
         for(int id:ids){
-            findViewById(id).setOnClickListener(this);
+            View view=getView(id);
+            if(view!=null){
+                view.setOnClickListener(this);
+            }
         }
+    }
+
+    /**
+     * 设置动画style
+     * @param style
+     */
+    public void setStyle(int style) {
+        this.style = style;
+    }
+
+    /**
+     * 设置softInputMode
+     * @param softMode
+     */
+    public void setSoftMode(int softMode) {
+        this.softMode = softMode;
+    }
+
+    public void setExitAnimation(Animation exitAnimation) {
+        this.exitAnimation=exitAnimation;
+        if(dialog!=null){
+            dialog.setExitAnimation(exitAnimation);
+        }
+    }
+
+    @Override
+    public void onExitAnimation() {
+
+    }
+
+    @Override
+    public void dismiss() {
+        if(rootView!=null&&rootView.findFocus()!=null){
+            SoftKeyboardUtils.hideSoftKeyboard(rootView.findFocus());
+        }
+        if(dialog!=null){
+            dialog.cancel();
+        }
+    }
+
+    /**
+     * dismiss监听
+     * @param dialog
+     */
+    @Override
+    public void onDismiss(@NonNull  DialogInterface dialog) {
+        super.onDismiss(dialog);
+        if(dismiss!=null){
+            dismiss.onDisFree();
+        }
+    }
+
+    public boolean isTrend() {
+        return isTrend;
+    }
+
+    /**
+     * 设置是否动态
+     * @param trend
+     * @return
+     */
+    public FreeCusDialog setTrend(boolean trend) {
+        isTrend = trend;
+        return this;
+    }
+
+    /**
+     * dismiss监听器
+     * @param dismiss
+     * @return
+     */
+    public FreeCusDialog setDismiss(OnDisMissFreeDialog dismiss) {
+        this.dismiss = dismiss;
+        return this;
+    }
+
+    /**
+     * 获取dialog的rootView
+     * @return
+     */
+    public View getRootView() {
+        return rootView;
     }
 }
