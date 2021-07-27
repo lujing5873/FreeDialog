@@ -11,7 +11,7 @@ allprojects {
 module.gradle下添加
 ```
 dependencies {
-implementation 'com.github.lujing5873:FreeDialog:V1.1.2'
+implementation 'com.github.lujing5873:FreeDialog:V1.1.3'
 }
 ```
 ### 使用
@@ -75,8 +75,8 @@ findViewById(R.id.tv_list_free).setOnClickListener(new View.OnClickListener() {
 ```
 
 ### 属性说明
-#### FreeCusDialog
-setElevation(int dp) 设置阴影 默认为3dp 值为dp值
+#### FreeCusDialog && FreeDialog
+setElevation(int dp) 设置阴影 默认为2dp 值为dp值
 
 setDimAmount(float dimAmount)  设置遮罩层透明度 如果没有设置anchorView 默认为0.5F否则为0
 
@@ -96,10 +96,11 @@ setDrag(Boolean canDrag) 设置是否可以长按拖拽
 
 setTimeMills(int timeMills)设置长按时间  默认为300ms
 
-#### FreeDialog
-getViewById(@IdRes int id) 根据id查找view 为了防止在activity使用相同名称混淆
+setSoftMode(int softMode) 设置输入法模式 详情请查阅相关资料
 
-其余同上
+ setStyle(int style) 设置window style 通常用于设置window动画等
+ 
+ setTrend(boolean trend) 设置是否动态载入数据
 
 
-
+### 更多用法请查看demo
