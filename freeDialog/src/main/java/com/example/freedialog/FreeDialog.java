@@ -38,7 +38,7 @@ public class FreeDialog extends FreeCusDialog{
         }
         public abstract void onCreateView(Bundle savedInstanceState);
 
-        protected  <T extends View> T getViewById(@IdRes int id) {
+        protected  <T extends View> T getView(@IdRes int id) {
             return freeDialog.getView(id);
         }
         public Builder setGravity(int gravity) {

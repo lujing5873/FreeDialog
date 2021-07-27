@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
                 new FreeDialog.Builder(R.layout.dialog_list) {
                     @Override
                     public void onCreateView(Bundle savedInstanceState) {
-                        RecyclerView recyclerView=getViewById(R.id.rv_list);
+                        RecyclerView recyclerView=getView(R.id.rv_list);
                         recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
                         TestAdapter testAdapter=new TestAdapter();
                         List<String> list=new ArrayList<>();
