@@ -3,9 +3,6 @@ buildscript {
     repositories {
 
         mavenCentral()
-        // 阿里云云效仓库：https://maven.aliyun.com/mvn/guide
-        maven { url 'https://maven.aliyun.com/repository/jcenter' }
-        maven { url 'https://maven.aliyun.com/repository/google' }
         google()
     }
     dependencies {
@@ -17,9 +14,6 @@ buildscript {
 allprojects {
     repositories {
         mavenCentral()
-        // 阿里云云效仓库：https://maven.aliyun.com/mvn/guide
-        maven { url 'https://maven.aliyun.com/repository/jcenter' }
-        maven { url 'https://maven.aliyun.com/repository/google' }
         google()
 
     }

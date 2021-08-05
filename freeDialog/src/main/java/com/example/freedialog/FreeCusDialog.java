@@ -3,6 +3,7 @@ package com.example.freedialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.res.Resources;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
@@ -25,6 +26,8 @@ import androidx.fragment.app.DialogFragment;
 import com.example.freedialog.dialog.WeakDialog;
 import com.example.freedialog.utils.SoftKeyboardUtils;
 
+import static android.view.View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
+import static android.view.WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS;
 import static android.view.WindowManager.LayoutParams.FLAG_FULLSCREEN;
 
 
@@ -65,12 +68,13 @@ public abstract class FreeCusDialog extends DialogFragment implements
     private int style;
     private boolean isTrend;
 
+
+
     Animation exitAnimation;
     OnDisMissFreeDialog dismiss;
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);//设置背景透明
         dialog.getWindow().getDecorView().setBackgroundResource(android.R.color.transparent); //设置背景
         ViewGroup view= (ViewGroup) dialog.getWindow().getDecorView();
@@ -247,7 +251,7 @@ public abstract class FreeCusDialog extends DialogFragment implements
                 heightMax =Math.min(defMaxHeight,(location[1]-statusHeight)*2+anchorView.getHeight()-pxElevation*2);
                 break;
             default://BOTTOM
-                heightMax = Math.min(defMaxHeight,screen.heightPixels-location[1]+statusHeight-pxElevation*2);
+                heightMax = Math.min(defMaxHeight,screen.heightPixels-location[1]-anchorView.getHeight()+statusHeight-pxElevation*2);
                 break;
         }
 
@@ -347,8 +351,13 @@ public abstract class FreeCusDialog extends DialogFragment implements
      */
     private  int getStatusBarHeight() {
 //        如果是全屏了 则返回0
-        if ( (getActivity().getWindow().getAttributes().flags & FLAG_FULLSCREEN)
-                == FLAG_FULLSCREEN) {
+        int flags=getActivity().getWindow().getAttributes().flags;
+        int sysUi=getActivity().getWindow().getDecorView().getSystemUiVisibility();
+        if ((flags & FLAG_FULLSCREEN)== FLAG_FULLSCREEN) {
+            return 0;
+        }
+
+        if ((sysUi & SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)== SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN) {
             return 0;
         }
         //获取状态栏高度
@@ -358,6 +367,8 @@ public abstract class FreeCusDialog extends DialogFragment implements
         return height;
     }
 
+
+//    (flags&FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)==FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS
     /**
      * 获取屏幕宽高
      * @return
@@ -607,4 +618,10 @@ public abstract class FreeCusDialog extends DialogFragment implements
     public View getRootView() {
         return rootView;
     }
+
+
+    public void showJustPan(boolean isShow){
+
+    }
+
 }
