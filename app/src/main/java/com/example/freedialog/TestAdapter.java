@@ -38,6 +38,12 @@ public class TestAdapter extends ListAdapter<String, TestAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.textView.setText(getItem(position));
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.println("点击事件监听");
+            }
+        });
     }
 
 

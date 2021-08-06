@@ -55,6 +55,8 @@ public abstract class FreeCusDialog extends DialogFragment implements
     private int elevation=2;//0不带阴影 其他则带阴影 默认值为2
     private float dimAmount=-1;//遮罩层透明度
     private int[] location= new int[2];
+    DisplayMetrics screen;//缓存屏幕数据
+    private int barHeight,statusHeight;//缓存宽高数据
     private int xOffset,yOffset;//相对于view的x轴y轴偏移位置
     private View anchorView;//依附的view
     private int gravity;
@@ -199,17 +201,17 @@ public abstract class FreeCusDialog extends DialogFragment implements
             final int rHeight = rootView.getMeasuredHeight();
             final int rWidth = rootView.getMeasuredWidth();
             int x = 0, y = 0;
-            int statusHeight=getStatusBarHeight();
+            //location[1]已经包含了状态栏高度
             //处理y轴
             switch (yGravity) {
                 case TOP:
-                    y = location[1] + pxYOffset - statusHeight - rHeight - pxElevation * 2;
+                    y = location[1] -statusHeight+ pxYOffset  - rHeight - pxElevation * 2;
                     break;
                 case CENTER_VERTICAL:
-                    y = location[1] + pxYOffset - statusHeight - (rHeight - anchorView.getHeight()) / 2-pxElevation;
+                    y = location[1] + pxYOffset -statusHeight- (rHeight - anchorView.getHeight()) / 2-pxElevation;
                     break;
                 default://BOTTOM
-                    y = location[1] + pxYOffset - statusHeight + anchorView.getHeight()-pxElevation;
+                    y = location[1] + pxYOffset + anchorView.getHeight()-pxElevation-statusHeight;
                     break;
             }
 
@@ -233,12 +235,13 @@ public abstract class FreeCusDialog extends DialogFragment implements
     private void measureRoot(int pxElevation){
         //因为rootView inflate的依赖的是DecorView 所以LayoutParams 必定为FrameLayout.LayoutParams
         FrameLayout.LayoutParams params= (FrameLayout.LayoutParams) rootView.getLayoutParams();
-        DisplayMetrics screen=getWindowSize();//屏幕宽高
+        screen=getWindowSize();//屏幕宽高
+        anchorView.getLocationOnScreen(location);
         int withSpec, heightSpec;
         int yGravity = gravity & 0xf0;//获取前4位 得到y轴
         int xGravity = gravity & 0x0f;//获取后4位 得到x轴
-        anchorView.getLocationOnScreen(location);
-        int statusHeight=getStatusBarHeight();
+        statusHeight=getStatusBarHeight();
+        barHeight=getNavigationBarHeight();
         int heightMax,withMax;
         int defMaxHeight=screen.heightPixels-pxElevation*2
                 ,defMaxWith=screen.widthPixels-pxElevation*2;
@@ -251,9 +254,10 @@ public abstract class FreeCusDialog extends DialogFragment implements
                 heightMax =Math.min(defMaxHeight,(location[1]-statusHeight)*2+anchorView.getHeight()-pxElevation*2);
                 break;
             default://BOTTOM
-                heightMax = Math.min(defMaxHeight,screen.heightPixels-location[1]-anchorView.getHeight()+statusHeight-pxElevation*2);
+                heightMax = Math.min(defMaxHeight,screen.heightPixels-location[1]-anchorView.getHeight()-barHeight-pxElevation*2);
                 break;
         }
+
 
         //处理x轴
         switch (xGravity) {
@@ -352,14 +356,14 @@ public abstract class FreeCusDialog extends DialogFragment implements
     private  int getStatusBarHeight() {
 //        如果是全屏了 则返回0
         int flags=getActivity().getWindow().getAttributes().flags;
-        int sysUi=getActivity().getWindow().getDecorView().getSystemUiVisibility();
+//        int sysUi=getActivity().getWindow().getDecorView().getSystemUiVisibility();
         if ((flags & FLAG_FULLSCREEN)== FLAG_FULLSCREEN) {
             return 0;
         }
 
-        if ((sysUi & SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)== SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN) {
-            return 0;
-        }
+//        if ((sysUi & SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)== SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN) {
+//            return 0;
+//        }
         //获取状态栏高度
         Resources resources = getActivity().getResources();
         int resourceId = resources.getIdentifier("status_bar_height", "dimen", "android");
@@ -367,15 +371,29 @@ public abstract class FreeCusDialog extends DialogFragment implements
         return height;
     }
 
+    public int getNavigationBarHeight() {
+        boolean hasNavigationBar = false;
+        View content = getActivity().getWindow().getDecorView().findViewById(android.R.id.content);
+        if(content!=null){
+            hasNavigationBar=content.getBottom()==screen.heightPixels;
+        }
+        if(hasNavigationBar){
+            return 0;
+        }
+        Resources resources = getActivity().getResources();
+        int resourceId=resources.getIdentifier("navigation_bar_height","dimen","android");
+        int height = resources.getDimensionPixelSize(resourceId);
+        return height;
 
-//    (flags&FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)==FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS
+    }
     /**
      * 获取屏幕宽高
      * @return
      */
     private DisplayMetrics getWindowSize(){
         DisplayMetrics outMetrics = new DisplayMetrics();
-        getActivity().getWindowManager().getDefaultDisplay().getMetrics(outMetrics);
+        getActivity().getWindowManager().getDefaultDisplay().getRealMetrics(outMetrics);
+//        getActivity().getWindowManager().getDefaultDisplay().getMetrics(outMetrics);
         return outMetrics;
     }
     public <T extends View> T getView(@IdRes int id) {

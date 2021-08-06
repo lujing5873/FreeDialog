@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 public class TextDialog extends FreeCusDialog {
     public static TextDialog newInstance(String text) {
-
         Bundle args = new Bundle();
         args.putString("test",text);
         TextDialog fragment = new TextDialog();
@@ -17,12 +16,10 @@ public class TextDialog extends FreeCusDialog {
         return fragment;
     }
     TextView textView;
-
     @Override
     public int getLayoutId() {
         return R.layout.dialog_test;
     }
-
     @Override
     protected void createView(Bundle savedInstanceState) {
         String text=getArguments().getString("test","def");
@@ -30,7 +27,6 @@ public class TextDialog extends FreeCusDialog {
         textView.setText(text);
         addViewListener(R.id.tv_dialog);
     }
-
     @Override
     public void onClick(View v) {
         super.onClick(v);

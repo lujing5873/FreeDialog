@@ -25,6 +25,8 @@ public class ListDialog extends FreeCusDialog {
         }
         testAdapter.submitList(list);
         recyclerView.setAdapter(testAdapter);
+
+
     }
 
 }

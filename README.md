@@ -98,9 +98,9 @@ setTimeMills(int timeMills)设置长按时间  默认为300ms
 
 setSoftMode(int softMode) 设置输入法模式 详情请查阅相关资料
 
- setStyle(int style) 设置window style 通常用于设置window动画等
+setStyle(int style) 设置window style 通常用于设置window动画等
  
- setTrend(boolean trend) 设置是否动态载入数据
+setTrend(boolean trend) 设置是否动态载入数据
 
 
 ### 更多用法请查看demo
