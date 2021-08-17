@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/shape_top_20dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/top_cl"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/money"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="22dp"
+            android:layout_marginTop="20dp"
+            android:text="￥198"
+            android:textColor="#ffee9d18"
+            android:textSize="15sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+
+
+        <TextView
+            android:id="@+id/close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="11dp"
+            android:padding="5dp"
+            android:text="关闭"
+            android:textColor="#ffaaaaaa"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@+id/money"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/money"
+            />
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:text="已选套餐类型：线下课程实践版"
+            android:textColor="#ffaaaaaa"
+            android:textSize="12sp"
+            app:layout_constraintLeft_toLeftOf="@+id/money"
+            app:layout_constraintTop_toBottomOf="@+id/money"
+            />
+
+
+        <TextView
+            android:id="@+id/time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:text="出行日期：2020年2月25日"
+            android:textColor="#ffaaaaaa"
+            android:textSize="12sp"
+            app:layout_constraintLeft_toLeftOf="@+id/money"
+            app:layout_constraintTop_toBottomOf="@+id/name"
+            />
+
+        <TextView
+            android:id="@+id/all_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:text="预计行程：200分钟"
+            android:textColor="#ffaaaaaa"
+            android:textSize="12sp"
+            app:layout_constraintLeft_toLeftOf="@+id/money"
+            app:layout_constraintTop_toBottomOf="@+id/time"
+            />
+
+
+        <TextView
+            android:id="@+id/number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:text="购买数量：1 人"
+            android:textColor="#ffaaaaaa"
+            android:textSize="12sp"
+            app:layout_constraintLeft_toLeftOf="@+id/money"
+            app:layout_constraintTop_toBottomOf="@+id/all_time"
+            />
+
+        <View
+            android:id="@+id/line1"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginTop="14dp"
+            android:background="#eeeeee"
+            app:layout_constraintTop_toBottomOf="@+id/number"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/nes_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/top_cl">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/label1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="13dp"
+                android:text="套餐类型"
+                android:textColor="#ff282828"
+                android:textSize="15sp"
+                android:layout_marginLeft="22dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                />
+
+            <RadioGroup
+                android:id="@+id/rb_group"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:checkedButton="@id/rb1"
+                app:layout_constraintLeft_toLeftOf="@+id/label1"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/label1">
+
+                <RadioButton
+                    android:id="@+id/rb1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/selector_orange_gray_12dp"
+                    android:button="@color/transparent"
+                    android:gravity="center"
+                    android:minHeight="24dp"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:text="线上课程体验版"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"/>
+
+                <RadioButton
+                    android:id="@+id/rb2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/selector_orange_gray_12dp"
+                    android:button="@color/transparent"
+                    android:gravity="center"
+                    android:minHeight="24dp"
+                    android:layout_marginTop="200dp"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:text="线上课程体验版"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"/>
+
+
+                <RadioButton
+                    android:id="@+id/rb3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/selector_orange_gray_12dp"
+                    android:button="@color/transparent"
+                    android:gravity="center"
+                    android:minHeight="24dp"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:text="线上课程体验版"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"/>
+
+            </RadioGroup>
+
+            <TextView
+                android:id="@+id/label2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="22dp"
+                android:layout_marginTop="33dp"
+                android:text="出行时间："
+                android:textColor="#ff282828"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/rb_group"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2020-02-25"
+                app:layout_constraintLeft_toRightOf="@+id/label2"
+                app:layout_constraintTop_toTopOf="@+id/label2"/>
+
+
+            <View
+                android:id="@+id/line2"
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginTop="14dp"
+                android:background="@color/line_ee"
+                app:layout_constraintTop_toBottomOf="@+id/label2"/>
+
+            <CalendarView
+                android:id="@+id/calendar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/line2" />
+            <View
+                app:layout_constraintTop_toBottomOf="@+id/calendar"
+                android:layout_width="match_parent"
+                android:layout_height="96dp"/>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/bottom_cl"
+        android:layout_width="match_parent"
+        app:layout_goneMarginTop="23dp"
+        android:background="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_height="86.5dp">
+
+        <View
+            android:id="@+id/line3"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/line_ee"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+
+
+        <ImageView
+            android:id="@+id/iv_label"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_marginLeft="22dp"
+            android:layout_marginTop="13dp"
+            app:layout_constraintTop_toBottomOf="@+id/line3"
+            android:src="@mipmap/ic_hint_red"
+            app:layout_constraintLeft_toLeftOf="parent"
+           />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="11dp"
+            android:text="实际结算金额以下单页结算为准"
+            android:textColor="#ff666666"
+            android:textSize="12sp"
+            app:layout_constraintLeft_toRightOf="@+id/iv_label"
+            app:layout_constraintTop_toTopOf="@+id/iv_label"
+            />
+
+        <TextView
+            android:id="@+id/buy"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="11dp"
+            android:background="#EE9D18"
+            android:gravity="center"
+            android:minHeight="50dp"
+            app:layout_constraintTop_toBottomOf="@+id/iv_label"
+            android:text="立即购买"
+            android:textColor="#ffffffff"
+            android:textSize="15sp"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

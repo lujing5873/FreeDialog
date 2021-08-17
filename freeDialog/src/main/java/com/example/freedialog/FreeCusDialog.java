@@ -163,12 +163,19 @@ public abstract class FreeCusDialog extends DialogFragment implements
             //因为rootView inflate的依赖的是DecorView 所以LayoutParams 必定为FrameLayout.LayoutParams
             FrameLayout.LayoutParams params= (FrameLayout.LayoutParams) rootView.getLayoutParams();
             //设置window位布局的设置  如果为固定值的需要加上margin数值
-            dialog.getWindow().setLayout(params.width>0
-                            ?params.width+pxElevation*2+params.leftMargin+params.rightMargin
-                            :params.width
-                    ,params.height>0
-                            ?params.height+pxElevation*2+params.bottomMargin+params.topMargin
-                            :params.height);
+//            dialog.getWindow().setLayout(params.width>0
+//                            ?params.width+pxElevation*2+params.leftMargin+params.rightMargin
+//                            :params.width
+//                    ,params.height>0
+//                            ?params.height+pxElevation*2+params.bottomMargin+params.topMargin
+//                            :params.height);
+
+
+            easyMeasure(params,pxElevation);
+            //重新设置窗口大小
+            dialog.getWindow().setLayout(rootView.getMeasuredWidth()+pxElevation*2,2238+pxElevation*2);
+
+
 
             params.leftMargin+=pxElevation;
             params.rightMargin+=pxElevation;
@@ -236,7 +243,9 @@ public abstract class FreeCusDialog extends DialogFragment implements
         //因为rootView inflate的依赖的是DecorView 所以LayoutParams 必定为FrameLayout.LayoutParams
         FrameLayout.LayoutParams params= (FrameLayout.LayoutParams) rootView.getLayoutParams();
         screen=getWindowSize();//屏幕宽高
-        anchorView.getLocationOnScreen(location);
+        if(anchorView!=null){
+            anchorView.getLocationOnScreen(location);
+        }
         int withSpec, heightSpec;
         int yGravity = gravity & 0xf0;//获取前4位 得到y轴
         int xGravity = gravity & 0x0f;//获取后4位 得到x轴
@@ -302,6 +311,51 @@ public abstract class FreeCusDialog extends DialogFragment implements
         //手动measure获取view大小 用于后续位置调整
         rootView.measure(withSpec, heightSpec);
     }
+
+    private void easyMeasure( FrameLayout.LayoutParams params,int pxElevation){
+
+        screen=getWindowSize();//屏幕宽高
+        int defMaxHeight=screen.heightPixels-pxElevation*2
+                ,defMaxWith=screen.widthPixels-pxElevation*2;
+
+        int heightMax,withMax;
+        int withSpec, heightSpec;
+        statusHeight=getStatusBarHeight();
+        barHeight=getNavigationBarHeight();
+        heightMax = defMaxHeight-statusHeight-barHeight;
+        withMax =defMaxWith;
+
+        //处理宽度
+        switch (params.width){
+            case ViewGroup.LayoutParams.MATCH_PARENT:
+                withSpec = View.MeasureSpec.makeMeasureSpec(withMax, View.MeasureSpec.EXACTLY);
+                break;
+            case ViewGroup.LayoutParams.WRAP_CONTENT:
+                withSpec = View.MeasureSpec.makeMeasureSpec(withMax, View.MeasureSpec.AT_MOST);
+                break;
+            default: //固定值
+                withSpec = View.MeasureSpec.makeMeasureSpec(Math.min(params.width,withMax), View.MeasureSpec.EXACTLY);
+                break;
+        }
+        //处理高度
+        switch (params.height){
+            case ViewGroup.LayoutParams.MATCH_PARENT:
+                heightSpec = View.MeasureSpec.makeMeasureSpec(heightMax, View.MeasureSpec.EXACTLY);
+                break;
+            case ViewGroup.LayoutParams.WRAP_CONTENT:
+                heightSpec = View.MeasureSpec.makeMeasureSpec(heightMax, View.MeasureSpec.AT_MOST);
+                break;
+            default: //固定值
+                heightSpec = View.MeasureSpec.makeMeasureSpec(Math.min(params.height,heightMax), View.MeasureSpec.EXACTLY);
+                break;
+
+
+        }
+
+        //手动measure获取view大小 用于后续位置调整
+        rootView.measure(withSpec, heightSpec);
+    }
+
 
     /**
      * dialog的id

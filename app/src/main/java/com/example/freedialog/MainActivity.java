@@ -99,5 +99,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+        findViewById(R.id.tv_text_edit).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //如果没有setAnchor则不需要setTrend 为true  否则动态加载必须设置setTrend
+                new NesDialog().setGravity(Gravity.BOTTOM).show(getSupportFragmentManager(),"NesDialog");
+            }
+        });
+
     }
 }

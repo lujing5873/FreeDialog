@@ -9,4 +9,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="half_black">#88888888</color>
     <color name="transparent">#00000000</color>
+    <color name="line_ee">#eeeeee</color>
 </resources>
