@@ -11,7 +11,7 @@ allprojects {
 module.gradle下添加
 ```
 dependencies {
-implementation 'com.github.lujing5873:FreeDialog:1.1.3'
+implementation 'com.github.lujing5873:FreeDialog:1.1.4'
 }
 ```
 ### 使用
@@ -86,7 +86,7 @@ setAnchor(View anchorView, int xOffset, int yOffset) 设置anchorView
 
 setGravity(int gravity) 设置gravity
 
-findViewById(@IdRes int id) 根据id查找view
+getView(@IdRes int id) 根据id查找view
 
 setListener(ViewClick listener) 外部设置点击监听
 
