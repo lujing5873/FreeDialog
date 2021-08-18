@@ -163,17 +163,17 @@ public abstract class FreeCusDialog extends DialogFragment implements
             //因为rootView inflate的依赖的是DecorView 所以LayoutParams 必定为FrameLayout.LayoutParams
             FrameLayout.LayoutParams params= (FrameLayout.LayoutParams) rootView.getLayoutParams();
             //设置window位布局的设置  如果为固定值的需要加上margin数值
-//            dialog.getWindow().setLayout(params.width>0
-//                            ?params.width+pxElevation*2+params.leftMargin+params.rightMargin
-//                            :params.width
-//                    ,params.height>0
-//                            ?params.height+pxElevation*2+params.bottomMargin+params.topMargin
-//                            :params.height);
+            dialog.getWindow().setLayout(params.width>0
+                            ?params.width+pxElevation*2+params.leftMargin+params.rightMargin
+                            :params.width
+                    ,params.height>0
+                            ?params.height+pxElevation*2+params.bottomMargin+params.topMargin
+                            :params.height);
 
 
-            easyMeasure(params,pxElevation);
-            //重新设置窗口大小
-            dialog.getWindow().setLayout(rootView.getMeasuredWidth()+pxElevation*2,2238+pxElevation*2);
+//            easyMeasure(params,pxElevation);
+//            //重新设置窗口大小
+//            dialog.getWindow().setLayout(rootView.getMeasuredWidth()+pxElevation*2,rootView.getMeasuredHeight()+pxElevation*2);
 
 
 
