@@ -3,6 +3,7 @@ package com.example.freedialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -24,6 +25,7 @@ import androidx.fragment.app.DialogFragment;
 
 
 import com.example.freedialog.dialog.WeakDialog;
+import com.example.freedialog.utils.NotchScreenUtil;
 import com.example.freedialog.utils.SoftKeyboardUtils;
 
 import static android.view.View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
@@ -68,10 +70,8 @@ public abstract class FreeCusDialog extends DialogFragment implements
     float lastX,lastY,xDown,yDown;
     private ViewClick listener;
     private int style;
-    private boolean isTrend;
-
-
-
+    private boolean isTrend;//是否动态加载数据
+    private boolean isLiuHai;//是否有刘海
     Animation exitAnimation;
     OnDisMissFreeDialog dismiss;
     @NonNull
@@ -80,9 +80,12 @@ public abstract class FreeCusDialog extends DialogFragment implements
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);//设置背景透明
         dialog.getWindow().getDecorView().setBackgroundResource(android.R.color.transparent); //设置背景
         ViewGroup view= (ViewGroup) dialog.getWindow().getDecorView();
+        isLiuHai=NotchScreenUtil.hasNotStatus(getActivity().getWindow().getDecorView());
+        System.out.println("isliuhai>>>>>>>>>"+isLiuHai);
         view.removeAllViews();//不要其附属的子FrameLayout
         int pxElevation=dip2px(elevation);
         setDialogView(view, pxElevation);
+
         if(canDrag){
             setDrag(view);
         }
@@ -90,8 +93,12 @@ public abstract class FreeCusDialog extends DialogFragment implements
             setAnchorView(view, pxElevation);
         }
         // 遮罩层透明度
-        dialog.getWindow().setDimAmount(anchorView!=null?dimAmount==-1?0:dimAmount
-                :dimAmount==-1?0.5f:dimAmount);
+        float dim=anchorView!=null?dimAmount==-1?0:dimAmount :dimAmount==-1?0.5f:dimAmount;
+        dialog.getWindow().setDimAmount(dim);
+
+        if(dim==0){
+            dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        }
         if(style>0){
             setStyle(dialog.getWindow());
         }
@@ -171,12 +178,6 @@ public abstract class FreeCusDialog extends DialogFragment implements
                             :params.height);
 
 
-//            easyMeasure(params,pxElevation);
-//            //重新设置窗口大小
-//            dialog.getWindow().setLayout(rootView.getMeasuredWidth()+pxElevation*2,rootView.getMeasuredHeight()+pxElevation*2);
-
-
-
             params.leftMargin+=pxElevation;
             params.rightMargin+=pxElevation;
             params.topMargin+=pxElevation;
@@ -199,8 +200,6 @@ public abstract class FreeCusDialog extends DialogFragment implements
             if(!isTrend){
                 dialog.getWindow().setLayout(rootView.getMeasuredWidth()+pxElevation*2,rootView.getMeasuredHeight()+pxElevation*2);
             }
-
-
             dialog.getWindow().setGravity(Gravity.TOP | Gravity.LEFT);//必须设置
             //获取window的attributes用于设置位置
             WindowManager.LayoutParams windowParams = dialog.getWindow().getAttributes();
@@ -209,19 +208,19 @@ public abstract class FreeCusDialog extends DialogFragment implements
             final int rWidth = rootView.getMeasuredWidth();
             int x = 0, y = 0;
             //location[1]已经包含了状态栏高度
+
             //处理y轴
             switch (yGravity) {
                 case TOP:
-                    y = location[1] -statusHeight+ pxYOffset  - rHeight - pxElevation * 2;
+                    y = location[1]-(isLiuHai?statusHeight:0)+ pxYOffset  - rHeight - pxElevation * 2;
                     break;
                 case CENTER_VERTICAL:
-                    y = location[1] + pxYOffset -statusHeight- (rHeight - anchorView.getHeight()) / 2-pxElevation;
+                    y = Math.max(location[1] + pxYOffset -statusHeight- (rHeight - anchorView.getHeight()) / 2-pxElevation,isLiuHai?0:statusHeight);
                     break;
                 default://BOTTOM
-                    y = location[1] + pxYOffset + anchorView.getHeight()-pxElevation-statusHeight;
+                    y = location[1] + pxYOffset + anchorView.getHeight()-pxElevation-(isLiuHai?statusHeight:0);
                     break;
             }
-
             //处理x轴
             switch (xGravity) {
                 case LEFT:
@@ -244,7 +243,7 @@ public abstract class FreeCusDialog extends DialogFragment implements
         FrameLayout.LayoutParams params= (FrameLayout.LayoutParams) rootView.getLayoutParams();
         screen=getWindowSize();//屏幕宽高
         if(anchorView!=null){
-            anchorView.getLocationOnScreen(location);
+            anchorView.getLocationInWindow(location);
         }
         int withSpec, heightSpec;
         int yGravity = gravity & 0xf0;//获取前4位 得到y轴
@@ -409,13 +408,12 @@ public abstract class FreeCusDialog extends DialogFragment implements
      */
     private  int getStatusBarHeight() {
 //        如果是全屏了 则返回0
-        int flags=getActivity().getWindow().getAttributes().flags;
+//        int flags=getActivity().getWindow().getAttributes().flags;
 //        int sysUi=getActivity().getWindow().getDecorView().getSystemUiVisibility();
-        if ((flags & FLAG_FULLSCREEN)== FLAG_FULLSCREEN) {
-            return 0;
-        }
-
-//        if ((sysUi & SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)== SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN) {
+//        if ((flags & FLAG_FULLSCREEN)== FLAG_FULLSCREEN) {
+//            return 0;
+//        }
+//        if ( (sysUi & SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)== SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN &&!isNot) {
 //            return 0;
 //        }
         //获取状态栏高度
@@ -695,5 +693,4 @@ public abstract class FreeCusDialog extends DialogFragment implements
     public void showJustPan(boolean isShow){
 
     }
-
 }
