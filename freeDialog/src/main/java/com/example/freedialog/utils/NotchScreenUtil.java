@@ -14,6 +14,9 @@ public final class NotchScreenUtil {
                     return false;
                 }
                 DisplayCutout displayCutout =rootWindowInsets.getDisplayCutout();
+                if(displayCutout==null){
+                     return false;
+                }    
                 int top=displayCutout.getSafeInsetTop();
                 result=top!=0;
             }
