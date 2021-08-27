@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import com.nhcz500.freedialog.FreeCusDialog;
+
 public class TextDialog extends FreeCusDialog {
     public static TextDialog newInstance(String text) {
         Bundle args = new Bundle();

@@ -5,6 +5,8 @@ import android.os.Bundle;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.nhcz500.freedialog.FreeCusDialog;
+
 import java.util.ArrayList;
 import java.util.List;
 

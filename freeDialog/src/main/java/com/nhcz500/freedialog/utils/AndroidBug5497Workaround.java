@@ -1,11 +1,11 @@
-package com.example.freedialog.utils;
+package com.nhcz500.freedialog.utils;
 
 import android.graphics.Rect;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
-import com.example.freedialog.FreeCusDialog;
+import com.nhcz500.freedialog.FreeCusDialog;
+
 
 public class AndroidBug5497Workaround {
     // For more information, see https://issuetracker.google.com/issues/36911528
@@ -30,7 +30,6 @@ public class AndroidBug5497Workaround {
                 possiblyResizeChildOfContent(dialog);
             });
             frameLayoutParams = (FrameLayout.LayoutParams) mChildOfContent.getLayoutParams();
-            System.out.println(frameLayoutParams);
         }
     }
 

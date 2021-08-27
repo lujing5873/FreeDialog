@@ -1,4 +1,4 @@
-package com.example.freedialog;
+package com.nhcz500.freedialog;
 
 import android.os.Bundle;
 import android.view.View;
@@ -7,7 +7,6 @@ import android.view.animation.Animation;
 import androidx.annotation.IdRes;
 import androidx.fragment.app.FragmentManager;
 
-import com.example.freedialog.dialog.WeakDialog;
 
 
 public class FreeDialog extends FreeCusDialog{

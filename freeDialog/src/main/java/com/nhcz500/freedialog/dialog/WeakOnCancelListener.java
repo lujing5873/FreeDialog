@@ -1,4 +1,4 @@
-package com.example.freedialog.dialog;
+package com.nhcz500.freedialog.dialog;
 
 import android.content.DialogInterface;
 

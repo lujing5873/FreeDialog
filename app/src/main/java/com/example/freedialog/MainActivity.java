@@ -13,6 +13,8 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
+import com.nhcz500.freedialog.FreeDialog;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,13 +32,6 @@ public class MainActivity extends AppCompatActivity {
                 | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
 
         setContentView(R.layout.activity_main);
-
-        View decor = getWindow().getDecorView();
-
-            decor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-
-//            decor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
-
 
         findViewById(R.id.tv_text).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -108,10 +103,18 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        findViewById(R.id.tv_text_edit).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.tv_text_bottom).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 new NesDialog().setGravity(Gravity.BOTTOM).show(getSupportFragmentManager(),"NesDialog");
+            }
+        });
+
+
+        findViewById(R.id.tv_text_edit).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new EditDialog().setGravity(Gravity.BOTTOM).show(getSupportFragmentManager(),"NesDialog");
             }
         });
 

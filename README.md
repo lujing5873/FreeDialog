@@ -11,7 +11,7 @@ allprojects {
 module.gradle下添加
 ```
 dependencies {
-implementation 'com.github.lujing5873:FreeDialog:1.1.5'
+implementation 'com.github.lujing5873:FreeDialog:1.1.7'
 }
 ```
 ### 使用

@@ -1,10 +1,8 @@
-package com.example.freedialog;
+package com.nhcz500.freedialog;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.res.Resources;
-import android.graphics.Color;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
@@ -22,15 +20,9 @@ import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
-
-
-import com.example.freedialog.dialog.WeakDialog;
-import com.example.freedialog.utils.NotchScreenUtil;
-import com.example.freedialog.utils.SoftKeyboardUtils;
-
-import static android.view.View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
-import static android.view.WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS;
-import static android.view.WindowManager.LayoutParams.FLAG_FULLSCREEN;
+import com.nhcz500.freedialog.dialog.WeakDialog;
+import com.nhcz500.freedialog.utils.NotchScreenUtil;
+import com.nhcz500.freedialog.utils.SoftKeyboardUtils;
 
 
 public abstract class FreeCusDialog extends DialogFragment implements
@@ -80,8 +72,7 @@ public abstract class FreeCusDialog extends DialogFragment implements
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);//设置背景透明
         dialog.getWindow().getDecorView().setBackgroundResource(android.R.color.transparent); //设置背景
         ViewGroup view= (ViewGroup) dialog.getWindow().getDecorView();
-        isLiuHai=NotchScreenUtil.hasNotStatus(getActivity().getWindow().getDecorView());
-        System.out.println("isliuhai>>>>>>>>>"+isLiuHai);
+        isLiuHai= NotchScreenUtil.hasNotStatus(getActivity().getWindow().getDecorView());
         view.removeAllViews();//不要其附属的子FrameLayout
         int pxElevation=dip2px(elevation);
         setDialogView(view, pxElevation);

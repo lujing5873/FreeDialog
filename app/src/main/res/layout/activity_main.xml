@@ -72,17 +72,17 @@
 
 
     <TextView
-        android:id="@+id/tv_text_edit"
+        android:id="@+id/tv_text_bottom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="editDialog"
+        android:text="下方显示的动态dialog"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_text_lazy" />
 
     <TextView
-        android:id="@+id/tv_text_zw"
+        android:id="@+id/tv_text_edit"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -91,7 +91,7 @@
         android:text="editDialog"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_text_edit" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_text_bottom" />
     <View
         android:background="#aaaaaa"
         app:layout_constraintBottom_toBottomOf="parent"

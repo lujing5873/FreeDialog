@@ -1,4 +1,4 @@
-package com.example.freedialog.utils;
+package com.nhcz500.freedialog.utils;
 
 
 import android.os.Build;

@@ -4,7 +4,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.RadioGroup;
 
-public class NesDialog  extends FreeCusDialog{
+import com.nhcz500.freedialog.FreeCusDialog;
+
+public class NesDialog  extends FreeCusDialog {
     RadioGroup radioGroup;
     View nes;
     @Override

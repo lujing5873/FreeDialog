@@ -8,10 +8,12 @@ import android.view.animation.AnimationUtils;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.nhcz500.freedialog.FreeCusDialog;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class ExpDialog extends FreeCusDialog{
+public class ExpDialog extends FreeCusDialog {
     RecyclerView recyclerView;
     View bg;
     @Override
@@ -32,13 +34,7 @@ public class ExpDialog extends FreeCusDialog{
         }
         testAdapter.submitList(list);
         recyclerView.setAdapter(testAdapter);
-
-        bg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismiss();
-            }
-        });
+        bg.setOnClickListener(v -> dismiss());
         recyclerView.setAnimation( AnimationUtils.loadAnimation(getContext(),R.anim.anim_dialog_enter));
         bg.setAnimation(AnimationUtils.loadAnimation(getContext(),R.anim.anim_dialog_mask_in));
     }
