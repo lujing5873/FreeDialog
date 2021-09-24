@@ -6,6 +6,7 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -27,7 +28,7 @@ import com.nhcz500.freedialog.utils.SoftKeyboardUtils;
 
 public abstract class FreeCusDialog extends DialogFragment implements
         View.OnClickListener ,
-        WeakDialog.onExit {
+        WeakDialog.onExit, WeakDialog.onKeyTrans{
     private static final int AXIS_SPECIFIED = 0x0001; //0000 0001
     private static final int AXIS_PULL_BEFORE = 0x0002;  //0000 0010
     private static final int AXIS_PULL_AFTER = 0x0004; // 0000 0100
@@ -101,7 +102,6 @@ public abstract class FreeCusDialog extends DialogFragment implements
         }
         dialog.setCanceledOnTouchOutside(cancel);
         dialog.setCancelable(cancel);
-        dialog.setExitAnimation(exitAnimation);
         dialog.setOnExit(this);
         return dialog;
     }
@@ -376,6 +376,7 @@ public abstract class FreeCusDialog extends DialogFragment implements
     public LayoutInflater onGetLayoutInflater(@Nullable Bundle savedInstanceState) {
         if(dialog==null){
             dialog=new WeakDialog(getActivity());
+            dialog.setOnKey(this);
         }
         if(getLayoutId()>0){
             rootView= LayoutInflater.from(getActivity()).inflate(getLayoutId(), (ViewGroup) dialog.getWindow().getDecorView(),false);
@@ -702,5 +703,20 @@ public abstract class FreeCusDialog extends DialogFragment implements
 
     public void showJustPan(boolean isShow){
 
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        return false;
+    }
+
+    @Override
+    public boolean onKeyLongPress(int keyCode, KeyEvent event) {
+        return false;
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        return false;
     }
 }

@@ -2,6 +2,7 @@ package com.nhcz500.freedialog.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.view.KeyEvent;
 import android.view.animation.Animation;
 
 import androidx.annotation.NonNull;
@@ -12,6 +13,9 @@ import java.lang.ref.WeakReference;
 public class WeakDialog extends Dialog {
     private WeakReference<Animation> exitAnimation;
     private WeakReference<onExit> onExit;
+    private WeakReference<onKeyTrans> onKey;
+    private boolean isLongProgress;
+
     public WeakDialog(@NonNull Context context) {
         super(context);
     }
@@ -59,11 +63,6 @@ public class WeakDialog extends Dialog {
             super.dismiss();
         }
     }
-
-
-
-
-
     public void setExitAnimation(Animation exitAnimation) {
         this.exitAnimation =new WeakReference<>(exitAnimation) ;
     }
@@ -72,8 +71,58 @@ public class WeakDialog extends Dialog {
         this.onExit=new WeakReference<>(exit);
     }
 
+    public void setOnKey(onKeyTrans onKey) {
+        this.onKey = new WeakReference<>(onKey);
+    }
+
     public interface onExit{
         void onExitAnimation();
     }
 
+    public interface onKeyTrans{
+        boolean onKeyDown(int keyCode,KeyEvent event);
+        boolean onKeyLongPress(int keyCode,KeyEvent event);
+        boolean onKeyUp(int keyCode,KeyEvent event);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, @NonNull KeyEvent event) {
+        if(onKey!=null&&onKey.get()!=null){
+            if(onKey.get().onKeyDown(keyCode, event)){
+                if(event.getRepeatCount()==0){
+                    event.startTracking();
+                    isLongProgress=false;
+                }else{
+                    isLongProgress=true;
+                }
+                return true;
+            }
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public boolean onKeyLongPress(int keyCode, @NonNull KeyEvent event) {
+        if(onKey!=null&&onKey.get()!=null){
+            if(onKey.get().onKeyLongPress(keyCode, event)){
+                return true;
+            }
+        }
+        return super.onKeyLongPress(keyCode, event);
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, @NonNull KeyEvent event) {
+        if(onKey!=null&&onKey.get()!=null){
+            if(onKey.get().onKeyUp(keyCode, event)){
+                return true;
+            }
+        }
+        return super.onKeyUp(keyCode, event);
+    }
+
+
+    public boolean isLongProgress() {
+        return isLongProgress;
+    }
 }
