@@ -4,14 +4,16 @@
 ```
 allprojects {
     repositories {
-        maven { url 'https://www.jitpack.io' }
+        maven { 
+            url 'https://www.jitpack.io'
+        }
     }
 }
 ```
 module.gradle下添加
 ```
 dependencies {
-implementation 'com.github.lujing5873:FreeDialog:1.1.8'
+implementation 'com.github.lujing5873:FreeDialog:1.1.9'
 }
 ```
 ### 使用
