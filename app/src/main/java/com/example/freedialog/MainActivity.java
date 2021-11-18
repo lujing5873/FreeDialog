@@ -132,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.tv_text_align_left).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TextDialog.newInstance("Aligndsfdsfdsfdsfdsfdsfdfdsdsfdsfsdfdsfdsf").setElevation(2).setAnchor(findViewById(R.id.tv_text_align_left),0,0)
+                TextDialog.newInstance("Aligndsfdsfdsfdsfdsfdsfdfdsdsfdsfsdfdsfdsf").setElevation(10).setAnchor(findViewById(R.id.tv_text_align_left),0,0)
                         .setGravity(FreeCusDialog.ALIGN_LEFT).show(getSupportFragmentManager(),"align");
             }
         });
@@ -141,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.tv_text_align_right).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TextDialog.newInstance("Aligndsfdsfdsfdsfdsfdsfdfdsdsfdsfsdfdsfdsf").setElevation(2).setAnchor(findViewById(R.id.tv_text_align_right),0,0)
+                TextDialog.newInstance("Aligndsfdsfdsfdsfdsfdsfdfdsdsfdsfsdfdsfdsf").setElevation(15).setAnchor(findViewById(R.id.tv_text_align_right),0,0)
                         .setGravity(FreeCusDialog.ALIGN_RIGHT).show(getSupportFragmentManager(),"align");
             }
         });

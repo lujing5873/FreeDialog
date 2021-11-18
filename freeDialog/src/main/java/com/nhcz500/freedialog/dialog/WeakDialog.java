@@ -113,7 +113,7 @@ public class WeakDialog extends Dialog {
 
     @Override
     public boolean onKeyUp(int keyCode, @NonNull KeyEvent event) {
-        if(onKey!=null&&onKey.get()!=null){
+        if(onKey!=null&&onKey.get()!=null){//长按事件是否处理 由子类决定
             if(onKey.get().onKeyUp(keyCode, event)){
                 return true;
             }

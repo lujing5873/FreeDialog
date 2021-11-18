@@ -25,10 +25,10 @@ public class EditDialog extends FreeCusDialog {
 
     @Override
     public void showJustPan(boolean isShow) {
-        if(isShow){
-            //显示键盘的时候 滚动到底部
-            nestedScrollView.smoothScrollTo(0,nestedScrollView.getChildAt(0).getHeight());
-        }
+//        if(isShow){
+//            //显示键盘的时候 滚动到底部
+//            nestedScrollView.smoothScrollTo(0,nestedScrollView.getChildAt(0).getHeight());
+//        }
 
     }
 }

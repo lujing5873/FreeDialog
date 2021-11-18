@@ -220,11 +220,12 @@ public abstract class FreeCusDialog extends DialogFragment implements
             }
             //处理x轴
             switch (xGravity) {
+                //左右对齐忽略阴影
                 case ALIGN_LEFT:
-                    x=location[0]+ pxXOffset+pxElevation;
+                    x=location[0]+ pxXOffset-pxElevation;
                     break;
                 case ALIGN_RIGHT:
-                    x = location[0] + pxXOffset-rWidth +anchorView.getWidth()-pxElevation*2;
+                    x = location[0] + pxXOffset-rWidth +anchorView.getWidth()-pxElevation;
                     break;
                 case LEFT:
                     x = location[0] + pxXOffset - rWidth - pxElevation;
