@@ -40,6 +40,7 @@ public class AndroidBug5497Workaround {
         }
         if (usableHeightNow != usableHeightPrevious) {
             //如果两次高度不一致 //将计算的可视高度设置成视图的高度
+
             int diff=usableHeightPrevious-usableHeightNow;
             frameLayoutParams.bottomMargin = diff>0?diff:0;
             mChildOfContent.requestLayout();
@@ -56,4 +57,6 @@ public class AndroidBug5497Workaround {
         mChildOfContent.getWindowVisibleDisplayFrame(r);
         return (r.bottom);
     }
+
+
 }

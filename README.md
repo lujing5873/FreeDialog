@@ -11,7 +11,7 @@ allprojects {
 module.gradle下添加
 ```
 dependencies {
-implementation 'com.github.lujing5873:FreeDialog:1.2.0'
+implementation 'com.github.lujing5873:FreeDialog:1.2.1'
 }
 ```
 ### 使用
@@ -100,7 +100,7 @@ setSoftMode(int softMode) 设置输入法模式 详情请查阅相关资料
 
 setStyle(int style) 设置window style 通常用于设置window动画等
  
-setTrend(boolean trend) 设置是否动态载入数据
+setTrend(boolean trend) 设置是否动态载入数据  true则不会限制死window的大小
 
 
 ### 更多用法请查看demo

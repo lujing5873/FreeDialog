@@ -1,127 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="@color/white"
     android:layout_height="match_parent"
-    android:background="#66ccff"
-    tools:context=".MainActivity">
+    android:orientation="vertical">
 
     <TextView
-        android:id="@+id/tv_text"
-        android:layout_width="wrap_content"
+        android:id="@+id/tv_1"
+        android:gravity="center"
+        android:minHeight="55dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="55dp"
-        android:text="继承FreeCusDialog的textDialog"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/tv_list"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="继承FreeCusDialog的listDialog"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_text" />
-
-    <TextView
-        android:id="@+id/tv_text_free"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="FreeDialog Builder 的match textDialog"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_list" />
-
-    <TextView
-        android:id="@+id/tv_list_free"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="FreeDialog Builder 的listDialog"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_text_free" />
-
-    <TextView
-        android:id="@+id/tv_text_exp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="向下展开菜单"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_list_free" />
+        android:background="#FCECFC"
+        android:text="普通的dialog" />
 
 
 
     <TextView
-        android:id="@+id/tv_text_lazy"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="后加载数据的recyclerview"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_text_exp" />
-
-
-
-    <TextView
-        android:id="@+id/tv_text_bottom"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="下方显示的动态dialog"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_text_lazy" />
-
-
-
-
-    <TextView
-        android:id="@+id/tv_text_edit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:background="#66ccff"
-        android:text="editDialog"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_text_bottom" />
-
-
-    <TextView
-        android:id="@+id/tv_text_align_left"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="align Test Left"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_text_edit" />
-
-
-    <TextView
-        android:id="@+id/tv_text_align_right"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="align Test Right"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_text_align_left" />
-
-
-    <View
-        android:background="#aaaaaa"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:id="@+id/tv_2"
+        android:gravity="center"
+        android:minHeight="55dp"
         android:layout_width="match_parent"
-        android:layout_height="10dp"/>
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="#FCFCEC"
+        android:text="依附某个view的dialog"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <TextView
+        android:id="@+id/tv_3"
+        android:gravity="center"
+        android:minHeight="55dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="#ECFCFC"
+        android:text="带Edittext的dialog" />
+
+
+
+</androidx.appcompat.widget.LinearLayoutCompat>

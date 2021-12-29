@@ -2,9 +2,30 @@
 <resources>
 
     <!--从上往下-->
-    <style name="dialogScaleTopToBottom" parent="android:Animation" mce_bogus="1">
-        <item name="android:windowEnterAnimation">@anim/anim_dialog_enter</item>
-        <item name="android:windowExitAnimation">@anim/anim_dialog_exit</item>
+    <style name="DialogPositionTopToBottom" parent="android:Animation" mce_bogus="1">
+        <item name="android:windowEnterAnimation">@anim/anim_dialog_position_top_bottom_enter</item>
+        <item name="android:windowExitAnimation">@anim/anim_dialog_position_top_bottom_exit</item>
+    </style>
+
+
+    <!--从下往上-->
+    <style name="DialogPositionBottomToTop" parent="android:Animation" mce_bogus="1">
+        <item name="android:windowEnterAnimation">@anim/anim_dialog_position_bottom_top_enter</item>
+        <item name="android:windowExitAnimation">@anim/anim_dialog_position_bottom_top_exit</item>
+    </style>
+
+
+    <!--从左往右-->
+    <style name="DialogPositionLeftToRight" parent="android:Animation" mce_bogus="1">
+        <item name="android:windowEnterAnimation">@anim/anim_dialog_position_left_right_enter</item>
+        <item name="android:windowExitAnimation">@anim/anim_dialog_position_left_right_exit</item>
+    </style>
+
+
+    <!--从右往左-->
+    <style name="DialogPositionRightToLeft" parent="android:Animation" mce_bogus="1">
+        <item name="android:windowEnterAnimation">@anim/anim_dialog_position_right_left_enter</item>
+        <item name="android:windowExitAnimation">@anim/anim_dialog_position_right_left_exit</item>
     </style>
 
 

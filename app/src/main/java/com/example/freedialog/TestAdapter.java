@@ -12,6 +12,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class TestAdapter extends ListAdapter<String, TestAdapter.ViewHolder> {
 
+
+    private onClickListener listener;
+
     static DiffUtil.ItemCallback<String> diffCallback=new DiffUtil.ItemCallback<String>(){
 
         @Override
@@ -38,10 +41,9 @@ public class TestAdapter extends ListAdapter<String, TestAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.textView.setText(getItem(position));
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                System.out.println("点击事件监听");
+        holder.itemView.setOnClickListener(v -> {
+            if(listener!=null){
+                listener.onItemClick(holder.getAdapterPosition());
             }
         });
     }
@@ -52,9 +54,17 @@ public class TestAdapter extends ListAdapter<String, TestAdapter.ViewHolder> {
         public ViewHolder (View view)
         {
             super(view);
-            textView = (TextView) view.findViewById(R.id.tv_name);
+            textView = view.findViewById(R.id.tv_name);
         }
 
+    }
+
+    public void setListener(onClickListener listener) {
+        this.listener = listener;
+    }
+
+    public interface onClickListener{
+        void onItemClick(int position);
     }
 
 }

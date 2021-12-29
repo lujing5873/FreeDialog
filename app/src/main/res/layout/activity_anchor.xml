@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+    </data>
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:background="@color/white"
+        android:layout_height="match_parent">
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:paddingTop="55dp"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/tv1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#FCFCEC"
+            android:gravity="center"
+            android:minHeight="55dp"
+            android:text="下方 match宽高的dialog" />
+
+
+
+        <TextView
+            android:id="@+id/tv2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#FCFCEC"
+            android:gravity="center"
+            android:layout_marginTop="10dp"
+            android:minHeight="55dp"
+            android:text="下方 listDialog" />
+
+
+        <TextView
+            android:id="@+id/tv3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#FCFCEC"
+            android:gravity="center"
+            android:layout_marginTop="10dp"
+            android:minHeight="55dp"
+            android:text="下方 延时加载的listDialog" />
+
+        <TextView
+            android:id="@+id/tv4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#FCFCEC"
+            android:gravity="center"
+            android:layout_marginTop="10dp"
+            android:minHeight="55dp"
+            android:text="下方 滑出菜单" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+    </androidx.core.widget.NestedScrollView>
+</layout>

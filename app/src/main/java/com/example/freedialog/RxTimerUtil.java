@@ -87,7 +87,6 @@ public class RxTimerUtil {
      * 取消订阅
      */
     public static void cancelOne(){
-        System.out.println("cancelOne");
         if(mOneDisposable!=null&&!mOneDisposable.isDisposed()){
             mOneDisposable.dispose();
 

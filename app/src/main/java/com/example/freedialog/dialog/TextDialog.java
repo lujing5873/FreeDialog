@@ -1,45 +1,36 @@
-package com.example.freedialog;
+package com.example.freedialog.dialog;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.WindowManager;
-import android.widget.TextView;
 
+import com.example.freedialog.R;
+import com.example.freedialog.databinding.DialogTextBinding;
 import com.nhcz500.freedialog.FreeCusDialog;
 
 public class TextDialog extends FreeCusDialog {
     public static TextDialog newInstance(String text) {
         Bundle args = new Bundle();
-        args.putString("test",text);
+        args.putString("text",text);
         TextDialog fragment = new TextDialog();
         fragment.setArguments(args);
         return fragment;
     }
-    TextView textView;
+    private DialogTextBinding bind;
 
     @Override
     public int getLayoutId() {
-        return R.layout.dialog_test;
+        return R.layout.dialog_text;
     }
     @Override
     protected void createView(Bundle savedInstanceState) {
-        String text=getArguments().getString("test","def");
-        textView=getView(R.id.tv_dialog);
-        textView.setText(text);
-        addViewListener(R.id.tv_dialog);
+        String text=getArguments().getString("text","");
+
+        bind=DialogTextBinding.bind(rootView);
+        bind.tvDialog.setText(text);
+
+        addViewListener(R.id.cancel,R.id.ok);
     }
-    @Override
-    public void onClick(View v) {
-        super.onClick(v);
-        switch (v.getId()){
-            case R.id.tv_dialog:
-                System.out.println("点击了textview");
-                break;
-        }
-    }
+
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -58,5 +49,11 @@ public class TextDialog extends FreeCusDialog {
     public boolean onKeyLongPress(int keyCode, KeyEvent event) {
         System.out.println("onKeyLongPress"+keyCode);
         return super.onKeyLongPress(keyCode, event);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        bind.unbind();
     }
 }

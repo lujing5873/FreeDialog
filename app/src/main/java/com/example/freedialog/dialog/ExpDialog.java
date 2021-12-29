@@ -1,4 +1,4 @@
-package com.example.freedialog;
+package com.example.freedialog.dialog;
 
 import android.os.Bundle;
 import android.view.View;
@@ -8,6 +8,8 @@ import android.view.animation.AnimationUtils;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.freedialog.R;
+import com.example.freedialog.TestAdapter;
 import com.nhcz500.freedialog.FreeCusDialog;
 
 import java.util.ArrayList;
@@ -35,13 +37,18 @@ public class ExpDialog extends FreeCusDialog {
         testAdapter.submitList(list);
         recyclerView.setAdapter(testAdapter);
         bg.setOnClickListener(v -> dismiss());
-        recyclerView.setAnimation( AnimationUtils.loadAnimation(getContext(),R.anim.anim_dialog_enter));
+
+
+
+
+        //添加进入动画
+        recyclerView.setAnimation( AnimationUtils.loadAnimation(getContext(),R.anim.anim_dialog_position_top_bottom_enter));
         bg.setAnimation(AnimationUtils.loadAnimation(getContext(),R.anim.anim_dialog_mask_in));
     }
 
     @Override
     public void onExitAnimation() {
-        Animation exit= AnimationUtils.loadAnimation(getContext(),R.anim.anim_dialog_exit);
+        Animation exit= AnimationUtils.loadAnimation(getContext(),R.anim.anim_dialog_position_top_bottom_exit);
         setExitAnimation(exit);
 
         recyclerView.setAnimation(exit);

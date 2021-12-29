@@ -1,14 +1,19 @@
 package com.nhcz500.freedialog;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
 
 import androidx.annotation.IdRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentManager;
 
 
-
+/**
+ * 偷懒使用的方法  横竖屏切换场景  不建议使用  会不显示
+ */
 public class FreeDialog extends FreeCusDialog{
     private int layoutId;
     private Builder builder;
@@ -23,6 +28,11 @@ public class FreeDialog extends FreeCusDialog{
         }
     }
 
+    @NonNull
+    @Override
+    public LayoutInflater onGetLayoutInflater(@Nullable Bundle savedInstanceState) {
+        return super.onGetLayoutInflater(savedInstanceState);
+    }
 
     public void setLayoutId(int layoutId, Builder builder) {
         this.layoutId = layoutId;
@@ -68,6 +78,10 @@ public class FreeDialog extends FreeCusDialog{
         }
         public Builder setAnchor(View anchorView, int xOffset, int yOffset){
             freeDialog.setAnchor(anchorView,xOffset,yOffset);
+            return this;
+        }
+        public Builder setTrend(boolean trend){
+            freeDialog.setTrend(trend);
             return this;
         }
 

@@ -1,10 +1,12 @@
-package com.example.freedialog;
+package com.example.freedialog.dialog;
 
 import android.os.Bundle;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.freedialog.R;
+import com.example.freedialog.TestAdapter;
 import com.nhcz500.freedialog.FreeCusDialog;
 
 import java.util.ArrayList;

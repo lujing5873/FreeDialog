@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shape_white_5dp"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/tv_dialog"
+            android:layout_marginTop="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="确定XXXXX嘛"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="取消"
+            app:layout_constraintRight_toLeftOf="@+id/ok"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:background="#ECECEC"
+            android:minHeight="40dp"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:minWidth="80dp"
+            android:layout_marginTop="35dp"
+            app:layout_constraintTop_toBottomOf="@+id/tv_dialog" />
+
+
+        <TextView
+            android:id="@+id/ok"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#FCECEC"
+            android:minHeight="40dp"
+            android:layout_marginLeft="30dp"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:minWidth="80dp"
+            android:text="确定"
+            app:layout_constraintLeft_toRightOf="@+id/cancel"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/cancel" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
