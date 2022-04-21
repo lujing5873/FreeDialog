@@ -3,10 +3,13 @@ package com.nhcz500.freedialog.dialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.animation.Animation;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import com.nhcz500.freedialog.FreeCusDialog;
 
 import java.lang.ref.WeakReference;
 
@@ -15,6 +18,7 @@ public class WeakDialog extends Dialog {
     private WeakReference<onExit> onExit;
     private WeakReference<onKeyTrans> onKey;
     private boolean isLongProgress;
+    private WeakReference<Touch> touch;
 
     public WeakDialog(@NonNull Context context) {
         super(context);
@@ -75,8 +79,16 @@ public class WeakDialog extends Dialog {
         this.onKey = new WeakReference<>(onKey);
     }
 
+    public void setTouch(Touch touch){this.touch=new WeakReference<Touch>(touch);}
+
     public interface onExit{
         void onExitAnimation();
+    }
+
+
+    public interface Touch{
+        boolean  dispatchTouchEvent(MotionEvent ev);
+        boolean  onTouchEvent(MotionEvent ev);
     }
 
     public interface onKeyTrans{
@@ -124,5 +136,20 @@ public class WeakDialog extends Dialog {
 
     public boolean isLongProgress() {
         return isLongProgress;
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(@NonNull MotionEvent ev) {
+        if(touch.get()!=null&&touch.get().dispatchTouchEvent(ev)){
+            return true;
+        }
+        return super.dispatchTouchEvent(ev);
+    }
+    @Override
+    public boolean onTouchEvent(@NonNull MotionEvent event) {
+        if(touch.get()!=null&&touch.get().onTouchEvent(event)){
+            return true;
+        }
+        return super.onTouchEvent(event);
     }
 }

@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.example.freedialog.dialog.SelectDialog;
 import com.nhcz500.freedialog.FreeCusDialog;
 import com.nhcz500.freedialog.FreeDialog;
 import com.nhcz500.freedialog.config.DialogGravity;
@@ -45,6 +46,9 @@ public class MainActivity extends AppCompatActivity {
         });
         findViewById(R.id.tv_3).setOnClickListener(v -> {
             startActivity(new Intent(this,EditActivity.class));
+        });
+        findViewById(R.id.tv_4).setOnClickListener(v -> {
+            new SelectDialog().setGravity(DialogGravity.BOTTOM).show(getSupportFragmentManager(),"select");
         });
     }
 }

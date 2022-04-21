@@ -40,4 +40,14 @@
 
 
 
+    <TextView
+        android:id="@+id/tv_4"
+        android:gravity="center"
+        android:minHeight="55dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="#ECFCFC"
+        android:text="selectDialog" />
+
 </androidx.appcompat.widget.LinearLayoutCompat>

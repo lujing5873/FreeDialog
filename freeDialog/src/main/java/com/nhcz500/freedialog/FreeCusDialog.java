@@ -30,8 +30,7 @@ import com.nhcz500.freedialog.utils.SoftKeyboardUtils;
 
 
 public abstract class FreeCusDialog extends DialogFragment implements
-        View.OnClickListener ,
-        WeakDialog.onExit, WeakDialog.onKeyTrans{
+        View.OnClickListener , WeakDialog.onExit, WeakDialog.onKeyTrans,WeakDialog.Touch{
 
 
 
@@ -349,6 +348,7 @@ public abstract class FreeCusDialog extends DialogFragment implements
         if(dialog==null){
             dialog=new WeakDialog(getActivity());
             dialog.setOnKey(this);
+            dialog.setTouch(this);
         }
         if(getLayoutId()>0){
             rootView= LayoutInflater.from(getActivity()).inflate(getLayoutId(), (ViewGroup) dialog.getWindow().getDecorView(),false);
@@ -732,6 +732,13 @@ public abstract class FreeCusDialog extends DialogFragment implements
     }
 
 
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        return false;
+    }
 
-
+    @Override
+    public boolean onTouchEvent(MotionEvent ev) {
+        return false;
+    }
 }

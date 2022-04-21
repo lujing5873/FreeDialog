@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/shape_white_5dp"
+    android:layout_width="match_parent"
+    android:layout_height="200dp">
+
+
+    <com.example.freedialog.SelectRv
+        android:id="@+id/left"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/center"/>
+    <com.example.freedialog.SelectRv
+        android:id="@+id/center"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        app:layout_constraintLeft_toRightOf="@+id/left"
+        app:layout_constraintRight_toLeftOf="@+id/right"/>
+    <com.example.freedialog.SelectRv
+        android:id="@+id/right"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        app:layout_constraintLeft_toRightOf="@+id/center"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
