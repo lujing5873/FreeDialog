@@ -1,4 +1,4 @@
-package com.example.freedialog;
+package com.example.freedialog.adp;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.freedialog.R;
 
 public class TestAdapter extends ListAdapter<String, TestAdapter.ViewHolder> {
 
@@ -62,24 +64,7 @@ public class TestAdapter extends ListAdapter<String, TestAdapter.ViewHolder> {
 
     }
 
-    @Override
-    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
-        linearLayoutManager= (LinearLayoutManager) recyclerView.getLayoutManager();
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                System.out.println("onScrollStateChanged"+linearLayoutManager.findFirstVisibleItemPosition());
-                super.onScrollStateChanged(recyclerView, newState);
-            }
 
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                System.out.println("onScrolled"+linearLayoutManager.findFirstVisibleItemPosition());
-                super.onScrolled(recyclerView, dx, dy);
-            }
-        });
-        super.onAttachedToRecyclerView(recyclerView);
-    }
 
     public void setListener(onClickListener listener) {
         this.listener = listener;

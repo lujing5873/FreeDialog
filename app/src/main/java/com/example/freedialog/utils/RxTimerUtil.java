@@ -1,4 +1,4 @@
-package com.example.freedialog;
+package com.example.freedialog.utils;
 
 import java.util.concurrent.TimeUnit;
 

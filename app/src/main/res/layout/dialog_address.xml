@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shape_white_5dp">
+
+
+        <TextView
+            android:id="@+id/address_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:paddingLeft="11dp"
+            android:paddingRight="11dp"
+            android:text="选择地址"
+            android:textColor="#ff333333"
+            android:textSize="16sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:layout_width="52dp"
+            android:layout_height="1dp"
+            android:background="#e1e1e1"
+            app:layout_constraintBottom_toBottomOf="@+id/address_title"
+            app:layout_constraintRight_toLeftOf="@+id/address_title"
+            app:layout_constraintTop_toTopOf="@+id/address_title" />
+
+
+        <View
+            android:layout_width="52dp"
+            android:layout_height="1dp"
+            android:background="#e1e1e1"
+            app:layout_constraintBottom_toBottomOf="@+id/address_title"
+            app:layout_constraintLeft_toRightOf="@+id/address_title"
+            app:layout_constraintTop_toTopOf="@+id/address_title" />
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/address_rv_layout"
+            android:layout_width="match_parent"
+            android:layout_marginTop="25dp"
+            app:layout_constraintTop_toBottomOf="@+id/address_title"
+            android:orientation="horizontal"
+            android:layout_height="194dp">
+            <com.example.freedialog.weight.SelectRv
+                android:id="@+id/address_rv1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
+
+            <com.example.freedialog.weight.SelectRv
+                android:id="@+id/address_rv2"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"/>
+
+            <com.example.freedialog.weight.SelectRv
+                android:id="@+id/address_rv3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            app:layout_constraintTop_toBottomOf="@+id/address_rv_layout"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:gravity="center"
+            android:paddingBottom="20dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:minHeight="44dp"
+                android:id="@+id/address_cancel"
+                android:minWidth="143dp"
+                android:gravity="center"
+                android:text="取消"
+                android:textColor="@color/black"
+                android:background="@drawable/shape_gray_12dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+
+            <TextView
+                android:minHeight="44dp"
+                android:id="@+id/address_ok"
+                android:minWidth="143dp"
+                android:gravity="center"
+                android:layout_marginLeft="20dp"
+                android:text="确定"
+                android:textColor="@color/white"
+                android:background="@drawable/shape_orange_12dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

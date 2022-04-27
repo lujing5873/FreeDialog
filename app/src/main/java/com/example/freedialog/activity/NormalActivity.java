@@ -1,4 +1,4 @@
-package com.example.freedialog;
+package com.example.freedialog.activity;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -10,6 +10,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
+import com.example.freedialog.R;
 import com.example.freedialog.databinding.ActivityNormalBinding;
 import com.example.freedialog.dialog.AnimDialog;
 import com.example.freedialog.dialog.TextDialog;
@@ -31,7 +32,7 @@ public class NormalActivity extends AppCompatActivity {
         window.setStatusBarColor(Color.TRANSPARENT);
         window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-        bind=  DataBindingUtil.setContentView(this,R.layout.activity_normal);
+        bind=  DataBindingUtil.setContentView(this, R.layout.activity_normal);
 
 
 

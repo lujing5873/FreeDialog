@@ -1,4 +1,4 @@
-package com.example.freedialog;
+package com.example.freedialog.weight;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -21,7 +21,7 @@ public class SelectRv extends RecyclerView {
     private LinearLayoutManager layoutManager;
     private int mItemH;
     private Paint mHoloPaint;
-    private int mWheelSize=5;
+    private int mWheelSize=4;
     private int itemWith=0;
 
     public SelectRv(@NonNull Context context) {
@@ -64,13 +64,12 @@ public class SelectRv extends RecyclerView {
     @Override
     public boolean drawChild(Canvas canvas, View child, long drawingTime) {
         int first=layoutManager.findFirstVisibleItemPosition();
-        int center= 2+first;
+        int center=  ((mWheelSize-1)>> 1)+first;
         int position=getChildAdapterPosition(child);
-        float cle=0.6F-Math.abs(position-center)*0.2F;
         if(position==center){
             child.setAlpha(1.0F);
         }else{
-            child.setAlpha(cle);
+            child.setAlpha(0.4F);
         }
         return super.drawChild(canvas, child, drawingTime);
     }
@@ -82,7 +81,7 @@ public class SelectRv extends RecyclerView {
     public void draw(Canvas canvas) {
         super.draw(canvas);
         if (mItemH != 0) {
-            int size = mWheelSize >> 1;
+            int size = (mWheelSize-1) >> 1;
             canvas.drawLine(0, mItemH * size, itemWith, mItemH
                     * size, mHoloPaint);
             canvas.drawLine(0, mItemH * (size + 1), itemWith, mItemH
@@ -90,6 +89,8 @@ public class SelectRv extends RecyclerView {
         }
     }
 
-
+    public int getSelect(){
+        return layoutManager==null ?-1:layoutManager.findFirstVisibleItemPosition();
+    }
 
 }

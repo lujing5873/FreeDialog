@@ -21,16 +21,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FreeDialog">
-        <activity android:name=".MainActivity" android:configChanges="orientation">
+        <activity android:name=".activity.MainActivity" android:configChanges="orientation">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".NormalActivity"/>
-        <activity android:name=".AnchorActivity"/>
-        <activity android:name=".EditActivity"/>
+        <activity android:name=".activity.NormalActivity"/>
+        <activity android:name=".activity.AnchorActivity"/>
+        <activity android:name=".activity.EditActivity"/>
 
 
     </application>

@@ -4,12 +4,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.core.widget.NestedScrollView;
-
 import com.example.freedialog.R;
-import com.example.freedialog.RxTimerUtil;
 import com.nhcz500.freedialog.FreeCusDialog;
-import com.nhcz500.freedialog.config.DialogGravity;
 import com.nhcz500.freedialog.utils.AndroidBug5497Workaround;
 
 

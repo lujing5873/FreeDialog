@@ -1,4 +1,4 @@
-package com.example.freedialog;
+package com.example.freedialog.model;
 
 import java.util.Objects;
 

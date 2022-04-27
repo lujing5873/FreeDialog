@@ -1,4 +1,4 @@
-package com.example.freedialog;
+package com.example.freedialog.activity;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -10,6 +10,7 @@ import android.view.WindowManager;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
+import com.example.freedialog.R;
 import com.example.freedialog.databinding.ActivityAnchorBinding;
 import com.example.freedialog.dialog.ExpDialog;
 import com.example.freedialog.dialog.LazyListDialog;
@@ -33,7 +34,7 @@ public class AnchorActivity extends AppCompatActivity {
         window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
 
-        bind=  DataBindingUtil.setContentView(this,R.layout.activity_anchor);
+        bind=  DataBindingUtil.setContentView(this, R.layout.activity_anchor);
 
 
 
