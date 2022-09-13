@@ -13,11 +13,14 @@ import android.widget.Toast;
 
 import com.example.freedialog.R;
 import com.example.freedialog.dialog.AddressDialog;
+import com.example.freedialog.dialog.TimeDialog;
+import com.example.freedialog.dialog.WindowDialog;
 import com.example.freedialog.model.AddressModel;
 import com.example.freedialog.model.AddressOne;
 import com.example.freedialog.utils.AddressData;
 import com.example.freedialog.utils.GsonUtils;
 import com.example.freedialog.utils.RxTimerUtil;
+import com.example.freedialog.utils.TimeUtils;
 import com.nhcz500.freedialog.config.DialogGravity;
 
 import java.io.BufferedReader;
@@ -53,16 +56,20 @@ public class MainActivity extends AppCompatActivity {
             startActivity(new Intent(this, EditActivity.class));
         });
         findViewById(R.id.tv_4).setOnClickListener(v -> {
-            new AddressDialog().setOnSelectAddress(new AddressDialog.OnSelectAddress() {
+            new TimeDialog().setOnSelectAddress(new TimeDialog.OnSelectAddress() {
                 @Override
                 public void onSelectAddress(AddressModel one, AddressModel two, AddressModel three) {
                     Toast.makeText(MainActivity.this,one.getName()+two.getName()+three.getName(),Toast.LENGTH_LONG).show();
                 }
             }).setTrend(true).setGravity(DialogGravity.BOTTOM).show(getSupportFragmentManager(), "select");
+
+//            new WindowDialog().setAnchor(findViewById(R.id.tv_4),0,0).setCancel(false).setDimAmount(0).setElevation(2).setGravity(DialogGravity.BOTTOM).show(getSupportFragmentManager(), "select");
         });
 
 
         Schedulers.io().createWorker().schedule(() -> {
+            AddressData.TIME_YEAR.addAll(TimeUtils.getYear(2022,2032));
+            AddressData.TIME_MONTH.addAll(TimeUtils.getMonth());
             StringBuffer text = new StringBuffer();
             try {
                 BufferedReader buffer = new BufferedReader(new InputStreamReader(getAssets().open("city.json")));

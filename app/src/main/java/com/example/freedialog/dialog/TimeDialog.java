@@ -9,24 +9,20 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.freedialog.R;
 import com.example.freedialog.adp.AddressAdp;
-import com.example.freedialog.adp.TestAdapter2;
 import com.example.freedialog.databinding.DialogAddressBinding;
 import com.example.freedialog.model.AddressModel;
 import com.example.freedialog.model.AddressTwo;
 import com.example.freedialog.utils.AddressData;
+import com.example.freedialog.utils.TimeUtils;
 import com.example.freedialog.weight.TopLinearSnapHelper;
 import com.nhcz500.freedialog.FreeCusDialog;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class AddressDialog extends FreeCusDialog {
+public class TimeDialog extends FreeCusDialog {
     private DialogAddressBinding bind;
 
     private AddressAdp adp1, adp2, adp3;
 
     private OnSelectAddress onSelectAddress;
-
 
     @Override
     public int getLayoutId() {
@@ -65,7 +61,7 @@ public class AddressDialog extends FreeCusDialog {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {//滚动结束需要更新数据
-                    setData(false, true);
+                    setData();
                 }
             }
         });
@@ -74,12 +70,14 @@ public class AddressDialog extends FreeCusDialog {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {//滚动结束需要更新数据
-                    setData(false, false);
+                    setData();
                 }
             }
         });
-        setData(true, false);
 
+        adp1.setList(AddressData.TIME_YEAR);
+        adp2.setList(AddressData.TIME_MONTH);
+        setData();
 
         addViewListener(R.id.address_ok, R.id.address_cancel);
     }
@@ -101,52 +99,24 @@ public class AddressDialog extends FreeCusDialog {
         }
     }
 
-    private void setData(boolean freshAll, boolean freshTwo) {
+    private void setData() {
 
-
-        if (freshAll) {
-            List<AddressModel> all = new ArrayList<>();
-            for (AddressModel tmp : AddressData.ADDRESS_DATA) {
-                all.add(tmp);
-            }
-            adp1.setList(all);
-        }
-
+        int secondSelect = bind.addressRv2.getSelect();
         int firstSelect = bind.addressRv1.getSelect();
         if (firstSelect < 0) {
             firstSelect = 0;
         }
-
-        List<AddressModel> twoList = new ArrayList<>();
-        List<AddressTwo> two = AddressData.ADDRESS_DATA.get(firstSelect).getCityList();
-
-        for (AddressModel tmp : two) {
-            twoList.add(tmp);
-        }
-        adp2.setList(twoList);
-
-        List<AddressModel> threeList = new ArrayList<>();
-        if (two.isEmpty()) { //为空设置空值
-            adp3.setList(threeList);
-            return;
-        }
-
-        int secondSelect = bind.addressRv2.getSelect();
         if (secondSelect < 0) {
             secondSelect = 0;
         }
-
-        adp3.setList(two.get(secondSelect >= two.size() ? 0 : secondSelect).getAreaList());
-
-        if (freshTwo) {
-            bind.addressRv2.scrollToPosition(0);
-        }
-        bind.addressRv3.scrollToPosition(0);
+        int year= new Integer(AddressData.TIME_YEAR.get(firstSelect).getCode());
+        int month= new Integer(AddressData.TIME_MONTH.get(secondSelect).getCode());
+        adp3.setList(TimeUtils.getDays(year,month));
 
     }
 
 
-    public AddressDialog setOnSelectAddress(OnSelectAddress onSelectAddress) {
+    public TimeDialog setOnSelectAddress(OnSelectAddress onSelectAddress) {
         this.onSelectAddress = onSelectAddress;
         return this;
     }

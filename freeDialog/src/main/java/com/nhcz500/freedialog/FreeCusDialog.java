@@ -225,6 +225,9 @@ public abstract class FreeCusDialog extends DialogFragment implements
             }
             windowParams.x=x;
             windowParams.y=y;
+            // 拥有穿透效果 dialog布局之外可以相应事件传递
+//            windowParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;
+
             dialog.getWindow().setAttributes(windowParams);
         }
     }

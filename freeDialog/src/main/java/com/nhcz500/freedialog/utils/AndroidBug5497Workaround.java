@@ -16,6 +16,7 @@ public class AndroidBug5497Workaround {
     }
     private View mChildOfContent;
     private int usableHeightPrevious;
+    private int firstHeightPrevious;
     private FrameLayout.LayoutParams frameLayoutParams;
     private boolean needFlush;
     private boolean isShow;
@@ -37,11 +38,12 @@ public class AndroidBug5497Workaround {
         int usableHeightNow = computeUsableHeight();
         if(usableHeightPrevious==0){
             usableHeightPrevious = usableHeightNow;
+            firstHeightPrevious=usableHeightPrevious;
         }
         if (usableHeightNow != usableHeightPrevious) {
             //如果两次高度不一致 //将计算的可视高度设置成视图的高度
 
-            int diff=usableHeightPrevious-usableHeightNow;
+            int diff=firstHeightPrevious-usableHeightNow;
             frameLayoutParams.bottomMargin = diff>0?diff:0;
             mChildOfContent.requestLayout();
             needFlush=true;
